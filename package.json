@@ -1,0 +1,20 @@
+{
+  "name": "neon",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:neon-loves-e2e/neon.git",
+  "author": "indexmotion <indexmotion@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^21.1.8",
+    "jest": "^21.2.1",
+    "typescript": "^2.6.2"
+  },
+  "dependencies": {},
+  "scripts": {
+    "tsc": "./node_modules/.bin/tsc",
+    "tsc:auto": "./node_modules/.bin/tsc --watch",
+    "test": "./node_modules/.bin/jest lib",
+    "test:auto": "./node_modules/.bin/jest --watchAll lib"
+  }
+}
