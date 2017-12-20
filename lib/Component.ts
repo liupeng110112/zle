@@ -2,40 +2,42 @@ import { IDisplayObject, IDisplayObjectConstructor } from "./DisplayObject";
 import { IContext } from './Context';
 
 export interface IUINode {
-  $selector: string;
-  $name?: string;
-  $hasDescendants?: boolean;
+  readonly $selector: string;
+  readonly $name?: string;
+  readonly $hasDescendants?: boolean;
 }
-
-type UINodePair = [string | undefined, IUINode];
 
 export interface IComponent extends IUINode, IDisplayObject {
   $walkNodes(): IterableIterator<IUINode>;
   $findNodeByName(name: string): IUINode | undefined;
+  $overrideName(name: string): void;
 }
 
 export interface IComponentConstructor<T extends IComponent> extends IDisplayObjectConstructor<T> {
 }
 
 class UIDefination {
-  protected descendants = new Array<UINodePair>();
+  protected descendants = new Array<IUINode>();
   
   constructor(protected context: IContext) {
   }
 
-  getDescendants(): ReadonlyArray<UINodePair> {
+  getDescendants(): ReadonlyArray<IUINode> {
     return this.descendants;
   }
 
   withDescendant<T extends IComponent>(selectorOrConstructor: string | IComponentConstructor<T>, name?: string) {
     if (typeof selectorOrConstructor === 'string') {
-      this.descendants.push([name, {
+      this.descendants.push({
         $selector: selectorOrConstructor,
         $name: name
-      }]);
+      });
     } else {
-      const node = this.context.container.get(selectorOrConstructor);
-      this.descendants.push([name ? name : node.$name, node]);  // Re-configure property "name".
+      const node = new selectorOrConstructor(this.context);
+      if (name) {
+        node.$overrideName(name);
+      }
+      this.descendants.push(node);
     }
     return this;
   }
@@ -61,6 +63,10 @@ export abstract class Component implements IComponent {
     return this.definition.getDescendants().length > 0;
   }
 
+  $overrideName(name: string) {
+    this.name = name;
+  }
+
   protected $root(selector: string, name?: string) {
     this.selector = selector;
     this.name = name;
@@ -73,16 +79,9 @@ export abstract class Component implements IComponent {
       $name: this.$name,
       $hasDescendants: this.$hasDescendants
     };
-    for (let [name, node] of this.definition.getDescendants()) {
+    for (let node of this.definition.getDescendants()) {
       if (node instanceof Component) {
-        const iter = node.$walkNodes();
-        const result = iter.next();  // Skip real component itself, yield node below instead.
-        yield {
-          $selector: node.$selector,
-          $name: name,  // Property "name" may be re-configured if component is generic.
-          $hasDescendants: node.$hasDescendants
-        };
-        yield *iter;
+        yield* node.$walkNodes();
       } else {
         yield {
           $selector: node.$selector,
