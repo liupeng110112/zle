@@ -5,5 +5,5 @@ export interface IDisplayObject {
 }
 
 export interface IDisplayObjectConstructor<T extends IDisplayObject> {
-  new(context: IContext): T;
+  new(context: IContext, ...args: any[]): T;
 };

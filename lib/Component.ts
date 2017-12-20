@@ -10,16 +10,16 @@ export interface IUINode {
 export interface IComponent extends IUINode, IDisplayObject {
   $walkNodes(): IterableIterator<IUINode>;
   $findNodeByName(name: string): IUINode | undefined;
-  $overrideName(name: string): void;
 }
 
 export interface IComponentConstructor<T extends IComponent> extends IDisplayObjectConstructor<T> {
+  new(context: IContext, parent?: IComponent, name?: string): T;
 }
 
 class UIDefination {
   protected descendants = new Array<IUINode>();
   
-  constructor(protected context: IContext) {
+  constructor(protected context: IContext, protected component: IComponent) {
   }
 
   getDescendants(): ReadonlyArray<IUINode> {
@@ -33,10 +33,7 @@ class UIDefination {
         $name: name
       });
     } else {
-      const node = new selectorOrConstructor(this.context);
-      if (name) {
-        node.$overrideName(name);
-      }
+      const node = new selectorOrConstructor(this.context, this, name);
       this.descendants.push(node);
     }
     return this;
@@ -46,9 +43,8 @@ class UIDefination {
 export abstract class Component implements IComponent {
   protected abstract definition: UIDefination;
   private selector: string;
-  private name?: string;
 
-  constructor(protected context: IContext) {
+  constructor(protected context: IContext, protected parent?: IComponent, protected name?: string) {
   }
 
   get $selector() {
@@ -63,14 +59,12 @@ export abstract class Component implements IComponent {
     return this.definition.getDescendants().length > 0;
   }
 
-  $overrideName(name: string) {
-    this.name = name;
-  }
-
   protected $root(selector: string, name?: string) {
     this.selector = selector;
-    this.name = name;
-    return new UIDefination(this.context);
+    if (!this.name) {
+      this.name = name;
+    }
+    return new UIDefination(this.context, this);
   }
 
   *$walkNodes(): IterableIterator<IUINode> {
