@@ -29,11 +29,11 @@ class UIDefination {
   withDescendant<T extends IComponent>(selectorOrConstructor: string | IComponentConstructor<T>, name?: string) {
     if (typeof selectorOrConstructor === 'string') {
       this.descendants.push({
-        $selector: selectorOrConstructor,
+        $selector: [this.component.$selector, selectorOrConstructor].join(' '),
         $name: name
       });
     } else {
-      const node = new selectorOrConstructor(this.context, this, name);
+      const node = new selectorOrConstructor(this.context, this.component, name);
       this.descendants.push(node);
     }
     return this;
@@ -48,7 +48,7 @@ export abstract class Component implements IComponent {
   }
 
   get $selector() {
-    return this.selector;
+    return this.parent ? [this.parent.$selector, this.selector].join(' ') : this.selector;
   }
 
   get $name() {

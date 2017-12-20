@@ -45,7 +45,7 @@ describe('Component', () => {
 
     test('can find node by name', () => {
       const node = main.$findNodeByName('nav bar')!;
-      expect(node.$selector).toEqual('.nav-bar');
+      expect(node.$selector).toEqual('.main .nav-bar');
       expect(node.$name).toEqual('nav bar');
     });
 
@@ -54,10 +54,10 @@ describe('Component', () => {
       expect(nodes[0].$selector).toEqual('.main');
       expect(nodes[0].$name).toEqual('main');
       expect(nodes[0].$hasDescendants).toBeTruthy();
-      expect(nodes[1].$selector).toEqual('.nav-bar');
+      expect(nodes[1].$selector).toEqual('.main .nav-bar');
       expect(nodes[1].$name).toEqual('nav bar');
       expect(nodes[1].$hasDescendants).toBeFalsy();
-      expect(nodes[2].$selector).toEqual('.content-area');
+      expect(nodes[2].$selector).toEqual('.main .content-area');
       expect(nodes[2].$name).toBeUndefined();
       expect(nodes[2].$hasDescendants).toBeFalsy();
     });
@@ -77,7 +77,7 @@ describe('Component', () => {
     const main = new Main(context);
     test('can find node by name', () => {
       const node = main.$findNodeByName('specific nav bar')!;
-      expect(node.$selector).toEqual('.nav-bar');
+      expect(node.$selector).toEqual('.main .nav-bar');
       expect(node.$name).toEqual('specific nav bar');
       expect(node.$hasDescendants).toBeFalsy();
     });
@@ -96,10 +96,26 @@ describe('Component', () => {
                           .withDescendant('h2', 'post title');
     }
 
+    class CommentComposer extends Component {
+      definition = this.$root('div.comment-composer', 'comment composer')
+                          .withDescendant('input', 'comment input field');
+    }
+
+    class CommentItem extends Component {
+      definition = this.$root('li');
+    }
+
+    class CommentList extends Component {
+      definition = this.$root('div.comments ul')
+                          .withDescendant(CommentItem);
+    }
+
     class Footer extends Component {
       definition = this.$root('footer', 'hot footer')
                           .withDescendant('span.author')
-                          .withDescendant('span.publish-date', 'publish date');
+                          .withDescendant('span.publish-date', 'publish date')
+                          .withDescendant(CommentComposer)
+                          .withDescendant(CommentList);
     }
 
     class Main extends Component {
@@ -113,11 +129,11 @@ describe('Component', () => {
 
     test('can find node by name', () => {
       let node = main.$findNodeByName('magic header')!;
-      expect(node.$selector).toEqual('header');
+      expect(node.$selector).toEqual('.main header');
       expect(node.$name).toEqual('magic header');
       expect(node.$hasDescendants).toBeTruthy();
       node = main.$findNodeByName('hot footer')!;
-      expect(node.$selector).toEqual('footer');
+      expect(node.$selector).toEqual('.main footer');
       expect(node.$name).toEqual('hot footer');
       expect(node.$hasDescendants).toBeTruthy();
     });
@@ -134,33 +150,53 @@ describe('Component', () => {
           $hasDescendants: true
         },
         {
-          $selector: '.nav-bar',
+          $selector: '.main .nav-bar',
           $name: undefined,
           $hasDescendants: false
         },
         {
-          $selector: 'header',
+          $selector: '.main header',
           $name: 'magic header',
           $hasDescendants: true
         },
         {
-          $selector: 'h2',
+          $selector: '.main header h2',
           $name: 'post title',
           $hasDescendants: false
         },
         {
-          $selector: 'footer',
+          $selector: '.main footer',
           $name: 'hot footer',
           $hasDescendants: true
         },
         {
-          $selector: 'span.author',
+          $selector: '.main footer span.author',
           $name: undefined,
           $hasDescendants: false
         },
         {
-          $selector: 'span.publish-date',
+          $selector: '.main footer span.publish-date',
           $name: 'publish date',
+          $hasDescendants: false
+        },
+        {
+          $selector: '.main footer div.comment-composer',
+          $name: 'comment composer',
+          $hasDescendants: true
+        },
+        {
+          $selector: '.main footer div.comment-composer input',
+          $name: 'comment input field',
+          $hasDescendants: false
+        },
+        {
+          $selector: '.main footer div.comments ul',
+          $name: undefined,
+          $hasDescendants: true
+        },
+        {
+          $selector: '.main footer div.comments ul li',
+          $name: undefined,
           $hasDescendants: false
         }
       ];
