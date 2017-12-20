@@ -7,8 +7,10 @@ export interface IUINode {
   readonly $hasDescendants?: boolean;
 }
 
+type UINodeSatisfyingCallback = (node: IUINode) => boolean;
+
 export interface IComponent extends IUINode, IDisplayObject {
-  $walkNodes(): IterableIterator<IUINode>;
+  $walkNodes(satisfying?: UINodeSatisfyingCallback): IterableIterator<IUINode>;
   $findNodeByName(name: string): IUINode | undefined;
 }
 
@@ -67,12 +69,19 @@ export abstract class Component implements IComponent {
     return new UIDefination(this.context, this);
   }
 
-  *$walkNodes(): IterableIterator<IUINode> {
-    yield this;
+  *$walkNodes(satisfying?: UINodeSatisfyingCallback): IterableIterator<IUINode> {
+    if (!satisfying) {
+      yield this;
+    } else if (satisfying(this)) {
+      yield this;
+    }
     for (let node of this.definition.getDescendants()) {
       if (node instanceof Component) {
-        yield* node.$walkNodes();
+        yield* node.$walkNodes(satisfying);
       } else {
+        if (satisfying && !satisfying(node)) {
+          continue;
+        }
         yield node;
       }
     }

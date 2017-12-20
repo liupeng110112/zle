@@ -208,5 +208,47 @@ describe('Component', () => {
         expect(!!results[i].$hasDescendants).toEqual(expections[i].$hasDescendants);
       }
     });
+
+    test('filter nodes correctly while walking', () => {
+      const expections = [
+        {
+          $selector: '.main .nav-bar',
+          $name: undefined,
+          $hasDescendants: false
+        },
+        {
+          $selector: '.main header h2',
+          $name: 'post title',
+          $hasDescendants: false
+        },
+        {
+          $selector: '.main footer span.author',
+          $name: undefined,
+          $hasDescendants: false
+        },
+        {
+          $selector: '.main footer span.publish-date',
+          $name: 'publish date',
+          $hasDescendants: false
+        },
+        {
+          $selector: '.main footer div.comment-composer input',
+          $name: 'comment input field',
+          $hasDescendants: false
+        },
+        {
+          $selector: '.main footer div.comments ul li',
+          $name: undefined,
+          $hasDescendants: false
+        }
+      ];
+      const results = Array.from(main.$walkNodes((node) => !node.$hasDescendants));
+      expect(results.length).toEqual(expections.length);
+      for (let i = 0; i < results.length; i++) {
+        expect(results[i].$selector).toEqual(expections[i].$selector);
+        expect(results[i].$name).toEqual(expections[i].$name);
+        expect(!!results[i].$hasDescendants).toEqual(expections[i].$hasDescendants);
+      }
+    });
   });
 });
