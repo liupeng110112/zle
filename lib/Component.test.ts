@@ -12,19 +12,19 @@ describe('Component', () => {
 
     test('can find itself with right name', () => {
       expect(main.$findNodeByName('notexist')).toBeUndefined();
-      expect(main.$findNodeByName('main')).toEqual({
-        $selector: '.main',
-        $name: 'main',
-        $hasDescendants: false
-      })
+      const node = main.$findNodeByName('main')!;
+      expect(node.$selector).toEqual('.main');
+      expect(node.$name).toEqual('main');
+      expect(node.$hasDescendants).toBeFalsy();
     });
 
     test('walk nodes correctly', () => {
-      expect(Array.from(main.$walkNodes())).toEqual([{
-        $selector: '.main',
-        $name: 'main',
-        $hasDescendants: false
-      }]);
+      const nodes = Array.from(main.$walkNodes());
+      expect(nodes.length).toEqual(1);
+      const node = nodes[0];
+      expect(node.$selector).toEqual('.main');
+      expect(node.$name).toEqual('main');
+      expect(node.$hasDescendants).toBeFalsy();
     });
   });
 
@@ -37,11 +37,10 @@ describe('Component', () => {
     const main = new Main(context);
 
     test('has descendants', () => {
-      expect(main.$findNodeByName('main')).toEqual({
-        $selector: '.main',
-        $name: 'main',
-        $hasDescendants: true
-      })
+      const node = main.$findNodeByName('main')!;
+      expect(node.$selector).toEqual('.main');
+      expect(node.$name).toEqual('main');
+      expect(node.$hasDescendants).toBeTruthy();
     });
 
     test('can find node by name', () => {
@@ -51,22 +50,16 @@ describe('Component', () => {
     });
 
     test('walk nodes correctly', () => {
-      const result = Array.from(main.$walkNodes());
-      expect(result[0]).toEqual({
-        $selector: '.main',
-        $name: 'main',
-        $hasDescendants: true
-      });
-      expect(result[1]).toEqual({
-        $selector: '.nav-bar',
-        $name: 'nav bar',
-        $hasDescendants: false
-      });
-      expect(result[2]).toEqual({
-        $selector: '.content-area',
-        $name: undefined,
-        $hasDescendants: false
-      });
+      const nodes = Array.from(main.$walkNodes());
+      expect(nodes[0].$selector).toEqual('.main');
+      expect(nodes[0].$name).toEqual('main');
+      expect(nodes[0].$hasDescendants).toBeTruthy();
+      expect(nodes[1].$selector).toEqual('.nav-bar');
+      expect(nodes[1].$name).toEqual('nav bar');
+      expect(nodes[1].$hasDescendants).toBeFalsy();
+      expect(nodes[2].$selector).toEqual('.content-area');
+      expect(nodes[2].$name).toBeUndefined();
+      expect(nodes[2].$hasDescendants).toBeFalsy();
     });
   });
 
@@ -83,11 +76,10 @@ describe('Component', () => {
 
     const main = new Main(context);
     test('can find node by name', () => {
-      expect(main.$findNodeByName('specific nav bar')).toEqual({
-        $selector: '.nav-bar',
-        $name: 'specific nav bar',
-        $hasDescendants: false
-      })
+      const node = main.$findNodeByName('specific nav bar')!;
+      expect(node.$selector).toEqual('.nav-bar');
+      expect(node.$name).toEqual('specific nav bar');
+      expect(node.$hasDescendants).toBeFalsy();
     });
     test('cannot find nonexistent node', () => {
       expect(main.$findNodeByName('generic nav bar')).toBeUndefined();
@@ -120,16 +112,14 @@ describe('Component', () => {
     const main = new Main(context);
 
     test('can find node by name', () => {
-      expect(main.$findNodeByName('magic header')).toEqual({
-        $selector: 'header',
-        $name: 'magic header',
-        $hasDescendants: true
-      });
-      expect(main.$findNodeByName('hot footer')).toEqual({
-        $selector: 'footer',
-        $name: 'hot footer',
-        $hasDescendants: true
-      });
+      let node = main.$findNodeByName('magic header')!;
+      expect(node.$selector).toEqual('header');
+      expect(node.$name).toEqual('magic header');
+      expect(node.$hasDescendants).toBeTruthy();
+      node = main.$findNodeByName('hot footer')!;
+      expect(node.$selector).toEqual('footer');
+      expect(node.$name).toEqual('hot footer');
+      expect(node.$hasDescendants).toBeTruthy();
     });
 
     test('cannot find nonexistent node', () => {
@@ -137,7 +127,7 @@ describe('Component', () => {
     });
 
     test('walk nodes correctly', () => {
-      expect(Array.from(main.$walkNodes())).toEqual([
+      const expections = [
         {
           $selector: '.main',
           $name: undefined,
@@ -173,7 +163,14 @@ describe('Component', () => {
           $name: 'publish date',
           $hasDescendants: false
         }
-      ]);
+      ];
+      const results = Array.from(main.$walkNodes());
+      expect(results.length).toEqual(expections.length);
+      for (let i = 0; i < results.length; i++) {
+        expect(results[i].$selector).toEqual(expections[i].$selector);
+        expect(results[i].$name).toEqual(expections[i].$name);
+        expect(!!results[i].$hasDescendants).toEqual(expections[i].$hasDescendants);
+      }
     });
   });
 });

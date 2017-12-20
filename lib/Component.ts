@@ -74,20 +74,12 @@ export abstract class Component implements IComponent {
   }
 
   *$walkNodes(): IterableIterator<IUINode> {
-    yield {
-      $selector: this.$selector,
-      $name: this.$name,
-      $hasDescendants: this.$hasDescendants
-    };
+    yield this;
     for (let node of this.definition.getDescendants()) {
       if (node instanceof Component) {
         yield* node.$walkNodes();
       } else {
-        yield {
-          $selector: node.$selector,
-          $name: node.$name,
-          $hasDescendants: node.$hasDescendants ? true : false
-        }
+        yield node;
       }
     }
   }
