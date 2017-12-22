@@ -6,34 +6,34 @@ import { UIDefinitionNotFound } from './exceptions';
 test('UIDefinition', (t) => {
   @UIDefinition
     .root('nav')
-    .attach()
+    .bind
   class Nav extends Component {
   }
 
   @UIDefinition
     .root('header', 'general header')
     .withDescendant('h2', 'post title')
-    .attach()
+    .bind
   class Header extends Component {
   }
 
   @UIDefinition
     .root('div.comment-composer', 'comment composer')
     .withDescendant('input', 'comment input field')
-    .attach()
+    .bind
   class CommentComposer extends Component {
   }
 
   @UIDefinition
     .root('li')
-    .attach()
+    .bind
   class CommentItem extends Component {
   }
 
   @UIDefinition
     .root('div.comments ul')
     .withDescendant(CommentItem)
-    .attach()
+    .bind
   class CommentList extends Component {
   }
 
@@ -43,7 +43,7 @@ test('UIDefinition', (t) => {
     .withDescendant('span.publish-date', 'publish date')
     .withDescendant(CommentComposer)
     .withDescendant(CommentList, 'comments')
-    .attach()
+    .bind
   class Footer extends Component {
   }
 
@@ -52,7 +52,7 @@ test('UIDefinition', (t) => {
     .withDescendant(Nav)
     .withDescendant(Header, 'post header')
     .withDescendant(Footer)
-    .attach()
+    .bind
   class Post extends Component {
   }
 

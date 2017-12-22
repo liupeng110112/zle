@@ -8,7 +8,7 @@ export type UINode = {
 };
 
 export interface IUIDefinition {
-  attach<T extends IComponent>(): (constructor: IComponentConstructor<T>) => IComponentConstructor<T>;
+  bind<T extends IComponent>(constructor: IComponentConstructor<T>): IComponentConstructor<T>;
   findUINodeByName(name: string): UINode | undefined;
   walkUINodes(): IterableIterator<UINode>;
   withDescendant<T extends IComponent>(selectorOrConstructor: string | IComponentConstructor<T>, name?: string): IUIDefinition;
@@ -21,12 +21,10 @@ export class UIDefinition implements IUIDefinition {
   constructor(public selector: string, public name?: string) {
   }
 
-  attach<T extends IComponent>() {
-    return (constructor: IComponentConstructor<T>) => {
-      UIDefinition.definitions.set(constructor, this);
-      return constructor;
-    }
-  }
+  bind = <T extends IComponent>(constructor: IComponentConstructor<T>) => {
+    UIDefinition.definitions.set(constructor, this);
+    return constructor;
+  };
 
   findUINodeByName(name: string): UINode | undefined {
     for (let node of this.walkUINodes()) {
