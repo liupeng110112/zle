@@ -18,7 +18,7 @@ export class UIDefinition implements IUIDefinition {
   protected static definitions = new Map<IComponentConstructor<any>, UIDefinition>();
   protected descendants = new Array<[string | undefined, string | IComponentConstructor<any>]>();
 
-  constructor(protected selector: string, protected name?: string) {
+  protected constructor(protected selector: string, protected name?: string) {
   }
 
   bind = <T extends IComponent>(constructor: IComponentConstructor<T>) => {
