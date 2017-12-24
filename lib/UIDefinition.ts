@@ -1,5 +1,4 @@
 import { IComponentConstructor, IComponent } from './Component';
-import { UIDefinitionNotFound } from './exceptions';
 
 export type UINode = {
   locator: Array<string>;
@@ -25,6 +24,7 @@ export class UIDefinition implements IUIDefinition {
         return node;
       }
     }
+    return undefined;
   }
 
   *walkUINodes(): IterableIterator<UINode> {
