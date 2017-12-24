@@ -1,7 +1,6 @@
 import { test } from 'ava';
 import { UIDefinition, UINode } from './UIDefinition';
 import { Component } from './Component';
-import { UIDefinitionNotFound } from './exceptions';
 
 test('UIDefinition', (t) => {
   class Nav extends Component {
