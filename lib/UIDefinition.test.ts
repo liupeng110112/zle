@@ -4,57 +4,46 @@ import { Component } from './Component';
 import { UIDefinitionNotFound } from './exceptions';
 
 test('UIDefinition', (t) => {
-  @UIDefinition
-    .root('nav')
-    .bind
   class Nav extends Component {
+    static definition = UIDefinition
+                          .root('nav');
   }
 
-  @UIDefinition
-    .root('header', 'general header')
-    .withDescendant('h2', 'post title')
-    .bind
   class Header extends Component {
+    static definition = UIDefinition
+                          .root('header', 'general header')
+                          .withDescendant('h2', 'post title');
   }
 
-  @UIDefinition
-    .root('div.comment-composer', 'comment composer')
-    .withDescendant('input', 'comment input field')
-    .bind
   class CommentComposer extends Component {
+    static definition = UIDefinition
+                          .root('div.comment-composer', 'comment composer')
+                          .withDescendant('input', 'comment input field');
   }
 
-  @UIDefinition
-    .root('div.comments ul')
-    .bind
   class CommentList extends Component {
+    static definition = UIDefinition
+                          .root('div.comments ul');
   }
 
-  @UIDefinition
-    .root('footer', 'post footer')
-    .withDescendant('span.author')
-    .withDescendant('span.publish-date', 'publish date')
-    .withDescendant(CommentComposer)
-    .withDescendant(CommentList, 'comments')
-    .bind
   class Footer extends Component {
+    static definition = UIDefinition
+                          .root('footer', 'post footer')
+                          .withDescendant('span.author')
+                          .withDescendant('span.publish-date', 'publish date')
+                          .withDescendant(CommentComposer)
+                          .withDescendant(CommentList, 'comments');
   }
 
-  @UIDefinition
-    .root('div.post', 'post')
-    .withDescendant(Nav)
-    .withDescendant(Header, 'post header')
-    .withDescendant(Footer)
-    .bind
   class Post extends Component {
+    static definition = UIDefinition
+                          .root('div.post', 'post')
+                          .withDescendant(Nav)
+                          .withDescendant(Header, 'post header')
+                          .withDescendant(Footer);
   }
 
-  class App extends Component {
-  }
-
-  t.throws(() => UIDefinition.getDefinition(App), UIDefinitionNotFound);
-
-  const definition = UIDefinition.getDefinition(Post);
+  const definition = Post.definition;
 
   const post = definition.findUINodeByName('post')!;
   t.deepEqual(post.locator, ['div.post'])
