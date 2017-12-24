@@ -25,14 +25,7 @@ test('UIDefinition', (t) => {
   }
 
   @UIDefinition
-    .root('li')
-    .bind
-  class CommentItem extends Component {
-  }
-
-  @UIDefinition
     .root('div.comments ul')
-    .withDescendant(CommentItem)
     .bind
   class CommentList extends Component {
   }
@@ -82,7 +75,7 @@ test('UIDefinition', (t) => {
   const commentList = definition.findUINodeByName('comments')!;
   t.deepEqual(commentList.locator, ['div.post', 'footer', 'div.comments ul']);
   t.is(commentList.name, 'comments');
-  t.truthy(commentList.hasDescendants);
+  t.falsy(commentList.hasDescendants);
 
   const expections: Array<UINode> = [
     {
@@ -133,13 +126,8 @@ test('UIDefinition', (t) => {
     {
       locator: ['div.post', 'footer', 'div.comments ul'],
       name: 'comments',
-      hasDescendants: true
-    },
-    {
-      locator: ['div.post', 'footer', 'div.comments ul', 'li'],
-      name: undefined,
       hasDescendants: false
-    },
+    }
   ];
   const results = Array.from(definition.walkUINodes());
   t.is(results.length, expections.length);
