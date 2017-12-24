@@ -8,23 +8,16 @@ export type UINode = {
 };
 
 export interface IUIDefinition {
-  bind<T extends IComponent>(constructor: IComponentConstructor<T>): IComponentConstructor<T>;
   findUINodeByName(name: string): UINode | undefined;
   walkUINodes(): IterableIterator<UINode>;
   withDescendant<T extends IComponent>(selectorOrConstructor: string | IComponentConstructor<T>, name?: string): IUIDefinition;
 }
 
 export class UIDefinition implements IUIDefinition {
-  protected static definitions = new Map<IComponentConstructor<any>, UIDefinition>();
   protected descendants = new Array<[string | undefined, string | IComponentConstructor<any>]>();
 
   protected constructor(protected selector: string, protected name?: string) {
   }
-
-  bind = <T extends IComponent>(constructor: IComponentConstructor<T>) => {
-    UIDefinition.definitions.set(constructor, this);
-    return constructor;
-  };
 
   findUINodeByName(name: string): UINode | undefined {
     for (let node of this.walkUINodes()) {
@@ -47,7 +40,7 @@ export class UIDefinition implements IUIDefinition {
           name: name
         };
       } else {
-        const definition = UIDefinition.getDefinition(selectorOrConstructor);
+        const definition = selectorOrConstructor.definition;
         const results = definition.walkUINodes();
         if (name) {
           const first = results.next().value;
@@ -75,13 +68,5 @@ export class UIDefinition implements IUIDefinition {
 
   static root(selector: string, name?: string) {
     return new UIDefinition(selector, name);
-  }
-
-  static getDefinition<T extends IComponent>(constructor: IComponentConstructor<T>) {
-    const definition = UIDefinition.definitions.get(constructor);
-    if (!definition) {
-      throw new UIDefinitionNotFound(constructor.toString());
-    }
-    return definition;
   }
 }
