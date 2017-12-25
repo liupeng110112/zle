@@ -7,6 +7,9 @@ export type UINode = {
 };
 
 export interface IUIDefinition {
+  selector: string;
+  name?: string;
+
   findUINodeByName(name: string): UINode | undefined;
   walkUINodes(): IterableIterator<UINode>;
   withDescendant<T extends IComponent>(selectorOrConstructor: string | IComponentConstructor<T>, name?: string): IUIDefinition;
@@ -15,7 +18,7 @@ export interface IUIDefinition {
 export class UIDefinition implements IUIDefinition {
   protected descendants = new Array<[string | undefined, string | IComponentConstructor<any>]>();
 
-  protected constructor(protected selector: string, protected name?: string) {
+  protected constructor(public selector: string, public name?: string) {
   }
 
   findUINodeByName(name: string): UINode | undefined {
@@ -40,7 +43,7 @@ export class UIDefinition implements IUIDefinition {
           name: name
         };
       } else {
-        const definition = selectorOrConstructor.definition;
+        const definition = selectorOrConstructor.$definition;
         const results = definition.walkUINodes();
         if (name) {
           const first = results.next().value;
