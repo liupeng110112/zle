@@ -1,7 +1,7 @@
 import { IComponentConstructor, IComponent } from './Component';
 
 export type UINode = {
-  locator: Array<string>;
+  path: Array<string>;
   name?: string;
   hasDescendants?: boolean;
 };
@@ -32,14 +32,14 @@ export class UIDefinition implements IUIDefinition {
 
   *walkUINodes(): IterableIterator<UINode> {
     yield {
-      locator: [this.selector],
+      path: [this.selector],
       name: this.name,
       hasDescendants: this.descendants.length > 0
     };
     for (let [name, selectorOrConstructor] of this.descendants) {
       if (typeof selectorOrConstructor === 'string') {
         yield {
-          locator: [this.selector, selectorOrConstructor],
+          path: [this.selector, selectorOrConstructor],
           name: name
         };
       } else {
@@ -48,14 +48,14 @@ export class UIDefinition implements IUIDefinition {
         if (name) {
           const first = results.next().value;
           yield {
-            locator: [this.selector, ...first.locator],
+            path: [this.selector, ...first.path],
             name: name,
             hasDescendants: first.hasDescendants
           };
         }
         for (let node of results) {
           yield {
-            locator: [this.selector, ...node.locator],
+            path: [this.selector, ...node.path],
             name: node.name,
             hasDescendants: node.hasDescendants
           };
