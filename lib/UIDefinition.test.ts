@@ -4,29 +4,29 @@ import { Component } from './Component';
 
 test('UIDefinition', (t) => {
   class Nav extends Component {
-    static definition = UIDefinition
+    static $definition = UIDefinition
                           .root('nav');
   }
 
   class Header extends Component {
-    static definition = UIDefinition
+    static $definition = UIDefinition
                           .root('header', 'general header')
                           .withDescendant('h2', 'post title');
   }
 
   class CommentComposer extends Component {
-    static definition = UIDefinition
+    static $definition = UIDefinition
                           .root('div.comment-composer', 'comment composer')
                           .withDescendant('input', 'comment input field');
   }
 
   class CommentList extends Component {
-    static definition = UIDefinition
+    static $definition = UIDefinition
                           .root('div.comments ul');
   }
 
   class Footer extends Component {
-    static definition = UIDefinition
+    static $definition = UIDefinition
                           .root('footer', 'post footer')
                           .withDescendant('span.author')
                           .withDescendant('span.publish-date', 'publish date')
@@ -35,14 +35,14 @@ test('UIDefinition', (t) => {
   }
 
   class Post extends Component {
-    static definition = UIDefinition
+    static $definition = UIDefinition
                           .root('div.post', 'post')
                           .withDescendant(Nav)
                           .withDescendant(Header, 'post header')
                           .withDescendant(Footer);
   }
 
-  const definition = Post.definition;
+  const definition = Post.$definition;
 
   const post = definition.findUINodeByName('post')!;
   t.deepEqual(post.locator, ['div.post'])
