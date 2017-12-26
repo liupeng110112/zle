@@ -1,6 +1,14 @@
 import * as fs from 'fs';
 import * as http from 'http';
-import { DEFAULT_TESTING_SERVER_PORT } from "./constants";
+import { DEFAULT_TESTING_SERVER_PORT, DEFAULT_PUPPETEER_EXECUTABLE_PATH } from "./constants";
+
+export function getExecutablePath() {
+  let executablePath = DEFAULT_PUPPETEER_EXECUTABLE_PATH;
+  if (process.env.NEON_PUPPETEER_EXECUTABLE_PATH) {
+    executablePath = process.env.NEON_PUPPETEER_EXECUTABLE_PATH!;
+  }
+  return executablePath;
+}
 
 export function getPort() {
   let port = DEFAULT_TESTING_SERVER_PORT;
@@ -11,10 +19,7 @@ export function getPort() {
 }
 
 export function getPageUrl(pageName: string) {
-  let port = DEFAULT_TESTING_SERVER_PORT;
-  if (process.env.NEON_TESTING_SERVER_PORT) {
-    port = parseInt(process.env.NEON_TESTING_SERVER_PORT!);
-  }
+  const port = getPort();
   return `http://localhost:${port}/${pageName}`;
 }
 
