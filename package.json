@@ -17,8 +17,8 @@
     "tsc": "./node_modules/.bin/tsc",
     "tsc:auto": "./node_modules/.bin/tsc --watch",
     "test": "./node_modules/.bin/ava test/**/*.test.js",
-    "pretest": "node ./test/helpers &",
-    "posttest": "kill $(lsof -t -i:8081)",
+    "pretest": "node ./test/scaffolds/startTestingServer &",
+    "posttest": "node ./test/scaffolds/stopTestingServer",
     "test:auto": "yarn test --watch"
   }
 }
