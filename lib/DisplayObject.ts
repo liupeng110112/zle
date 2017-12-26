@@ -4,5 +4,6 @@ export interface IDisplayObject {
 }
 
 export interface IDisplayObjectConstructor<T extends IDisplayObject> {
-  waitFor(context: IContext, constructor: IDisplayObjectConstructor<T>, timeout?: number): Promise<T>;
+  new($context: IContext, ...args: any[]): T;
+  $waitFor(constructor: IDisplayObjectConstructor<T>, context: IContext, timeout?: number, ...args: any[]): Promise<T>;
 };
