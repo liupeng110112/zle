@@ -16,9 +16,9 @@
   "scripts": {
     "tsc": "./node_modules/.bin/tsc",
     "tsc:auto": "./node_modules/.bin/tsc --watch",
-    "test": "./node_modules/.bin/ava test/**/*.test.js || true",
+    "test": "./node_modules/.bin/ava test/**/*.test.js $NEON_TESTING_OPTIONS || true",
     "pretest": "node ./test/scaffolds/startTestingServer &",
     "posttest": "node ./test/scaffolds/stopTestingServer",
-    "test:auto": "yarn test --watch"
+    "test:auto": "NEON_TESTING_OPTIONS='--watch' yarn test"
   }
 }
