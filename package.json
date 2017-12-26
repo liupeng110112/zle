@@ -16,7 +16,9 @@
   "scripts": {
     "tsc": "./node_modules/.bin/tsc",
     "tsc:auto": "./node_modules/.bin/tsc --watch",
-    "test": "./node_modules/.bin/ava test/**/*.js",
-    "test:auto": "./node_modules/.bin/ava --watch test/**/*.js"
+    "test": "./node_modules/.bin/ava test/**/*.test.js",
+    "pretest": "node ./test/helpers &",
+    "posttest": "kill $(lsof -t -i:8081)",
+    "test:auto": "yarn test --watch"
   }
 }
