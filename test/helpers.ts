@@ -2,6 +2,14 @@ import * as fs from 'fs';
 import * as http from 'http';
 import { DEFAULT_TESTING_SERVER_PORT } from "./constants";
 
+export function getPort() {
+  let port = DEFAULT_TESTING_SERVER_PORT;
+  if (process.env.NEON_TESTING_SERVER_PORT) {
+    port = parseInt(process.env.NEON_TESTING_SERVER_PORT!);
+  }
+  return port;
+}
+
 export function getPageUrl(pageName: string) {
   let port = DEFAULT_TESTING_SERVER_PORT;
   if (process.env.NEON_TESTING_SERVER_PORT) {
