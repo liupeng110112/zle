@@ -34,9 +34,7 @@ export class Context {
     }
     return new Promise<T>(async (resolve, reject) => {
       const selector = scope
-        ? [await scope.$getCSSPath(), constructor.$definition.selector].join(
-            " "
-          )
+        ? [await scope.$selector, constructor.$definition.selector].join(" ")
         : constructor.$definition.selector;
       const conditions = this.createComponentConditions(
         constructor,
@@ -46,7 +44,16 @@ export class Context {
       await Promise.all(conditions);
       const handle = await this.page.$(selector);
       if (handle) {
-        resolve(new constructor(this, handle));
+        try {
+          const component = await Component.$initialize(
+            constructor,
+            this,
+            handle
+          );
+          resolve(component);
+        } catch (err) {
+          reject(err);
+        }
       } else {
         reject(
           new Error(

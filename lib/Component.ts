@@ -1,43 +1,39 @@
 import { ElementHandle } from "puppeteer";
 import { Context } from "./Context";
 import { UIDefinition } from "./UIDefinition";
+import { getCSSPath } from "./helpers";
 
 export type ComponentConstructor<T extends Component> = {
   $definition: UIDefinition;
-  new ($context: Context, $handle: ElementHandle): T;
+  new ($context: Context, $handle: ElementHandle, $selector: string): T;
+  $initialize<T extends Component>(
+    constructor: ComponentConstructor<T>,
+    context: Context,
+    handle: ElementHandle
+  ): Promise<T>;
 };
 
 export abstract class Component {
   static $definition: UIDefinition;
 
-  constructor(protected $context: Context, protected $handle: ElementHandle) {}
+  $findUINodeByName(name: string) {}
 
-  async $getCSSPath() {
-    const page = this.$context.getPage();
-    const path: string = await page.evaluate((el: HTMLElement) => {
-      const segments = new Array<string>();
-      let node = el;
-      while (node) {
-        const parent = node.parentElement!;
-        if (parent) {
-          const siblings = Array.from(parent.children).filter(el => {
-            return el.localName === node.localName;
-          });
-          if (siblings.length > 1) {
-            segments.push(
-              `${node.localName}:nth-child(${siblings.indexOf(node) + 1})`
-            );
-          } else {
-            segments.push(node.localName!); // only child
-          }
-        } else {
-          segments.push(node.localName!); // met element 'html'
-        }
-        node = parent;
-      }
-      segments.reverse();
-      return segments.join(" > ");
-    }, this.$handle);
-    return path;
+  async $walkUINodes() {}
+
+  static async $initialize<T extends Component>(
+    constructor: ComponentConstructor<T>,
+    context: Context,
+    handle: ElementHandle
+  ) {
+    const selector = await getCSSPath(context, handle);
+    return new constructor(context, handle, selector);
   }
+
+  constructor(
+    public $context: Context,
+    public $handle: ElementHandle,
+    public $selector: string
+  ) {}
+
+  protected getElementHandleByName(name: string) {}
 }
