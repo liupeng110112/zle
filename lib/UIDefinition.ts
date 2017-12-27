@@ -1,24 +1,22 @@
-import { IComponentConstructor, IComponent } from './Component';
+import { ComponentConstructor, Component } from "./Component";
+
+export type SatisfyingFunction = (selector: string) => boolean | "visible" | "hidden";
 
 export type UINode = {
-  path: Array<string>;
+  selector: string;
   name?: string;
+  satisfying?: SatisfyingFunction;
   hasDescendants?: boolean;
 };
 
-export interface IUIDefinition {
-  selector: string;
-  name?: string;
+// [selector or constructor, name, satisfying function]
+export type Descendant = [string | ComponentConstructor<any>, string | undefined, SatisfyingFunction | undefined];
 
-  findUINodeByName(name: string): UINode | undefined;
-  walkUINodes(): IterableIterator<UINode>;
-  withDescendant<T extends IComponent>(selectorOrConstructor: string | IComponentConstructor<T>, name?: string): IUIDefinition;
-}
+export class UIDefinition {
+  protected descendants = new Array<Descendant>();
 
-export class UIDefinition implements IUIDefinition {
-  protected descendants = new Array<[string | undefined, string | IComponentConstructor<any>]>();
-
-  protected constructor(public selector: string, public name?: string) {
+  static root(selector: string, name?: string) {
+    return new UIDefinition(selector, name);
   }
 
   findUINodeByName(name: string): UINode | undefined {
@@ -30,46 +28,49 @@ export class UIDefinition implements IUIDefinition {
     return undefined;
   }
 
-  *walkUINodes(): IterableIterator<UINode> {
+  *walkUINodes(isDescendant?: boolean): IterableIterator<UINode> {
     yield {
-      path: [this.selector],
+      selector: isDescendant ? this.selector : '',
       name: this.name,
       hasDescendants: this.descendants.length > 0
     };
-    for (let [name, selectorOrConstructor] of this.descendants) {
+    for (let [selectorOrConstructor, name, satisfying] of this.descendants) {
       if (typeof selectorOrConstructor === 'string') {
         yield {
-          path: [this.selector, selectorOrConstructor],
-          name: name
+          selector: isDescendant ? [this.selector, selectorOrConstructor].join(' ') : selectorOrConstructor,
+          name,
+          satisfying,
+          hasDescendants: false
         };
       } else {
         const definition = selectorOrConstructor.$definition;
-        const results = definition.walkUINodes();
+        const nodes = definition.walkUINodes(true);
         if (name) {
-          const first = results.next().value;
+          const { selector, satisfying, hasDescendants } = nodes.next().value;
           yield {
-            path: [this.selector, ...first.path],
-            name: name,
-            hasDescendants: first.hasDescendants
+            selector: isDescendant ? [this.selector, selector].join(' ') : selector,
+            name,
+            satisfying,
+            hasDescendants
           };
         }
-        for (let node of results) {
+        for (let { selector, name, satisfying, hasDescendants } of nodes) {
           yield {
-            path: [this.selector, ...node.path],
-            name: node.name,
-            hasDescendants: node.hasDescendants
+            selector: isDescendant ? [this.selector, selector].join(' ') : selector,
+            name,
+            satisfying,
+            hasDescendants
           };
         }
       }
     }
   }
 
-  withDescendant<T extends IComponent>(selectorOrConstructor: string | IComponentConstructor<T>, name?: string): IUIDefinition {
-    this.descendants.push([name, selectorOrConstructor]);
+  withDescendant<T extends Component>(selectorOrConstructor: string | ComponentConstructor<T>, name?: string, satisfying?: SatisfyingFunction): UIDefinition {
+    this.descendants.push([selectorOrConstructor, name, satisfying]);
     return this;
   }
 
-  static root(selector: string, name?: string) {
-    return new UIDefinition(selector, name);
+  protected constructor(public selector: string, public name?: string) {
   }
 }
