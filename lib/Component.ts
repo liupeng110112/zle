@@ -1,6 +1,6 @@
 import { ElementHandle } from "puppeteer";
 import { Context } from "./Context";
-import { UIDefinition } from "./UIDefinition";
+import { UIDefinition, UINode } from "./UIDefinition";
 import { getCSSPath } from "./helpers";
 
 export type ComponentConstructor<T extends Component> = {
@@ -16,9 +16,32 @@ export type ComponentConstructor<T extends Component> = {
 export abstract class Component {
   static $definition: UIDefinition;
 
-  $findUINodeByName(name: string) {}
+  $findUINodeByName(name: string) {
+    for (let node of this.$walkUINodes()) {
+      if (node.name === name) {
+        return node;
+      }
+    }
+    return undefined;
+  }
 
-  async $walkUINodes() {}
+  *$walkUINodes(): IterableIterator<UINode> {
+    const constructor = this.constructor as ComponentConstructor<any>;
+    const selectorPrefix = this.$selector;
+    for (let {
+      selector,
+      name,
+      satisfying,
+      hasDescendants
+    } of constructor.$definition.walkUINodes()) {
+      yield {
+        selector: [selectorPrefix, selector].join(" "),
+        name,
+        satisfying,
+        hasDescendants
+      };
+    }
+  }
 
   static async $initialize<T extends Component>(
     constructor: ComponentConstructor<T>,
@@ -35,5 +58,26 @@ export abstract class Component {
     public $selector: string
   ) {}
 
-  protected getElementHandleByName(name: string) {}
+  protected async $getElementHandleByName(name: string) {
+    const constructor = this.constructor as ComponentConstructor<any>;
+    if (name === constructor.$definition.name) {
+      return this.$handle;
+    } else {
+      const node = this.$findUINodeByName(name);
+      if (node) {
+        const page = this.$context.getPage();
+        const selector = node.selector;
+        const handle = await page.$(selector);
+        if (handle) {
+          return handle;
+        } else {
+          throw new Error(
+            `Cannot locate UINode "${name}" by selector "${selector}"`
+          );
+        }
+      } else {
+        throw new Error(`Cannot find UINode by name "${name}"`);
+      }
+    }
+  }
 }
