@@ -1,6 +1,9 @@
-import * as fs from 'fs';
-import * as http from 'http';
-import { DEFAULT_TESTING_SERVER_PORT, DEFAULT_PUPPETEER_EXECUTABLE_PATH } from "./constants";
+import * as fs from "fs";
+import * as http from "http";
+import {
+  DEFAULT_TESTING_SERVER_PORT,
+  DEFAULT_PUPPETEER_EXECUTABLE_PATH
+} from "./constants";
 
 export function getExecutablePath() {
   let executablePath = DEFAULT_PUPPETEER_EXECUTABLE_PATH;
@@ -28,11 +31,11 @@ export function createTestingServer(port: number) {
     const path = `${__dirname}/assets/${request.url!.slice(1)}.html`;
     fs.readFile(path, (err, data) => {
       if (err) {
-        response.writeHead(400, { 'Content-Type': 'text/html' });
+        response.writeHead(400, { "Content-Type": "text/html" });
         response.end(err.toString());
         return;
       }
-      response.writeHead(200, { 'Content-Type': 'text/html' });
+      response.writeHead(200, { "Content-Type": "text/html" });
       response.end(data);
     });
   });

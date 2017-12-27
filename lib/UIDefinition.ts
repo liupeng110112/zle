@@ -1,6 +1,8 @@
 import { ComponentConstructor, Component } from "./Component";
 
-export type SatisfyingFunction = (selector: string) => boolean | "visible" | "hidden";
+export type SatisfyingFunction = (
+  selector: string
+) => boolean | "visible" | "hidden";
 
 export type UINode = {
   selector: string;
@@ -10,7 +12,11 @@ export type UINode = {
 };
 
 // [selector or constructor, name, satisfying function]
-export type Descendant = [string | ComponentConstructor<any>, string | undefined, SatisfyingFunction | undefined];
+export type Descendant = [
+  string | ComponentConstructor<any>,
+  string | undefined,
+  SatisfyingFunction | undefined
+];
 
 export class UIDefinition {
   protected descendants = new Array<Descendant>();
@@ -30,14 +36,16 @@ export class UIDefinition {
 
   *walkUINodes(isDescendant?: boolean): IterableIterator<UINode> {
     yield {
-      selector: isDescendant ? this.selector : '',
+      selector: isDescendant ? this.selector : "",
       name: this.name,
       hasDescendants: this.descendants.length > 0
     };
     for (let [selectorOrConstructor, name, satisfying] of this.descendants) {
-      if (typeof selectorOrConstructor === 'string') {
+      if (typeof selectorOrConstructor === "string") {
         yield {
-          selector: isDescendant ? [this.selector, selectorOrConstructor].join(' ') : selectorOrConstructor,
+          selector: isDescendant
+            ? [this.selector, selectorOrConstructor].join(" ")
+            : selectorOrConstructor,
           name,
           satisfying,
           hasDescendants: false
@@ -48,7 +56,9 @@ export class UIDefinition {
         if (name) {
           const { selector, satisfying, hasDescendants } = nodes.next().value;
           yield {
-            selector: isDescendant ? [this.selector, selector].join(' ') : selector,
+            selector: isDescendant
+              ? [this.selector, selector].join(" ")
+              : selector,
             name,
             satisfying,
             hasDescendants
@@ -56,7 +66,9 @@ export class UIDefinition {
         }
         for (let { selector, name, satisfying, hasDescendants } of nodes) {
           yield {
-            selector: isDescendant ? [this.selector, selector].join(' ') : selector,
+            selector: isDescendant
+              ? [this.selector, selector].join(" ")
+              : selector,
             name,
             satisfying,
             hasDescendants
@@ -66,11 +78,14 @@ export class UIDefinition {
     }
   }
 
-  withDescendant<T extends Component>(selectorOrConstructor: string | ComponentConstructor<T>, name?: string, satisfying?: SatisfyingFunction): UIDefinition {
+  withDescendant<T extends Component>(
+    selectorOrConstructor: string | ComponentConstructor<T>,
+    name?: string,
+    satisfying?: SatisfyingFunction
+  ): UIDefinition {
     this.descendants.push([selectorOrConstructor, name, satisfying]);
     return this;
   }
 
-  protected constructor(public selector: string, public name?: string) {
-  }
+  protected constructor(public selector: string, public name?: string) {}
 }
