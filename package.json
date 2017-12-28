@@ -8,6 +8,7 @@
   "devDependencies": {
     "@types/puppeteer": "^0.13.8",
     "ava": "^0.24.0",
+    "typedoc": "^0.9.0",
     "typescript": "^2.6.2"
   },
   "dependencies": {
@@ -16,9 +17,11 @@
   "scripts": {
     "tsc": "./node_modules/.bin/tsc",
     "tsc:auto": "./node_modules/.bin/tsc --watch",
-    "test": "./node_modules/.bin/ava test/**/*.test.js $NEON_TESTING_OPTIONS || true",
+    "test":
+      "./node_modules/.bin/ava test/**/*.test.js $NEON_TESTING_OPTIONS || true",
     "pretest": "node ./test/scaffolds/startTestingServer &",
     "posttest": "node ./test/scaffolds/stopTestingServer",
-    "test:auto": "NEON_TESTING_OPTIONS='--watch' yarn test"
+    "test:auto": "NEON_TESTING_OPTIONS='--watch' yarn test",
+    "mkdoc": "./node_modules/.bin/typedoc --out doc lib/"
   }
 }
