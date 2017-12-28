@@ -8,6 +8,8 @@ import { ComponentConditionStrategy } from "./ComponentConditionStrategy";
 
 export class ComponentFactory<T extends Component>
   implements IAsyncFactory<T>, IDisplayObjectFactory<T> {
+  protected conditionStrategy = new ComponentConditionStrategy(this.context);
+
   constructor(protected context: Context) {}
 
   async $create(
@@ -31,12 +33,11 @@ export class ComponentFactory<T extends Component>
       const selector = scope
         ? [await scope.$selector, constructor.$definition.selector].join(" ")
         : constructor.$definition.selector;
-      const strategy = new ComponentConditionStrategy(
-        this.context,
+      const conditions = await this.conditionStrategy.$getConditions(
+        constructor,
         timeout,
         selector
       );
-      const conditions = await strategy.$getConditions(constructor);
       await Promise.all(conditions);
       const page = this.context.$getPage();
       const handle = await page.$(selector);

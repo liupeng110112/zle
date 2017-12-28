@@ -4,16 +4,14 @@ import { Context } from "./Context";
 
 export class ComponentConditionStrategy<T extends ComponentConstructor<any>>
   implements DisplayObjectConditionStrategy<T> {
-  constructor(
-    protected context: Context,
-    protected timeout?: number,
-    protected selectorPrefix?: string
-  ) {}
+  constructor(protected context: Context) {}
 
-  async $getConditions(constructor: T) {
+  async $getConditions(
+    constructor: T,
+    timeout?: number,
+    selectorPrefix?: string
+  ) {
     const page = this.context.$getPage();
-    const timeout = this.timeout;
-    const selectorPrefix = this.selectorPrefix;
     return Array.from(constructor.$definition.walkUINodes())
       .filter(node => node.satisfying || !node.hasDescendants)
       .map(node => {

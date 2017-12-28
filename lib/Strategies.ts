@@ -1,3 +1,3 @@
 export interface DisplayObjectConditionStrategy<T extends {}> {
-  $getConditions(constructor: T): Promise<Array<Promise<any>>>;
+  $getConditions(constructor: T, ...args: any[]): Promise<Array<Promise<any>>>;
 }
