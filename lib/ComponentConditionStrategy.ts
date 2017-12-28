@@ -1,4 +1,4 @@
-import { DisplayObjectConditionStrategy } from "./Strategies";
+import { DisplayObjectConditionStrategy } from "./DisplayObjectConditionStrategy";
 import { ComponentConstructor } from "./ComponentConstructor";
 import { Context } from "./Context";
 import { DEFAULT_WAIT_FOR_TIMEOUT } from "./constants";
