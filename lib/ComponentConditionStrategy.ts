@@ -1,10 +1,10 @@
-import { DisplayObjectConditionStrategy } from "./DisplayObjectConditionStrategy";
+import { IConditionStrategy } from "./IConditionStrategy";
 import { ComponentConstructor } from "./ComponentConstructor";
 import { Context } from "./Context";
 import { DEFAULT_WAIT_FOR_TIMEOUT } from "./constants";
 
 export class ComponentConditionStrategy<T extends ComponentConstructor<any>>
-  implements DisplayObjectConditionStrategy<T> {
+  implements IConditionStrategy<T> {
   constructor(protected context: Context) {}
 
   async $getConditions(
