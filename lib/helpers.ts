@@ -2,7 +2,7 @@ import { Context } from "./Context";
 import { ElementHandle } from "puppeteer";
 
 export async function getCSSPath(context: Context, handle: ElementHandle) {
-  const page = context.getPage();
+  const page = context.$getPage();
   const path: string = await page.evaluate((el: HTMLElement) => {
     const segments = new Array<string>();
     let node = el;

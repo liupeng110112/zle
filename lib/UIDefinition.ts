@@ -1,4 +1,5 @@
-import { ComponentConstructor, Component } from "./Component";
+import { Component } from "./Component";
+import { ComponentConstructor } from "./ComponentConstructor";
 
 export type SatisfyingFunction = (
   selector: string
