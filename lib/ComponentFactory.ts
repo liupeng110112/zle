@@ -1,5 +1,4 @@
 import { Component } from "./Component";
-import { DEFAULT_WAIT_FOR_TIMEOUT } from "./constants";
 import { Context } from "./Context";
 import { IAsyncFactory, IDisplayObjectFactory } from "./Factories";
 import { ComponentConstructor } from "./ComponentConstructor";
@@ -26,9 +25,6 @@ export class ComponentFactory<T extends Component>
     timeout?: number,
     scope?: Component
   ) {
-    if (!timeout) {
-      timeout = DEFAULT_WAIT_FOR_TIMEOUT;
-    }
     return new Promise<T>(async (resolve, reject) => {
       const selector = scope
         ? [await scope.$selector, constructor.$definition.selector].join(" ")
