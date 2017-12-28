@@ -1,6 +1,6 @@
-import { IAsyncFactory } from "./Factories";
 import { Context } from "./Context";
 import { launch, LaunchOptions } from "puppeteer";
+import { IAsyncFactory } from "./IAsyncFactory";
 
 export class ContextFactory implements IAsyncFactory<Context> {
   async $create(options?: LaunchOptions) {

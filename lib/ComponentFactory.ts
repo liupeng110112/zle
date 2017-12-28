@@ -1,9 +1,10 @@
 import { Component } from "./Component";
 import { Context } from "./Context";
-import { IAsyncFactory, IDisplayObjectFactory } from "./Factories";
 import { ComponentConstructor } from "./ComponentConstructor";
 import { ElementHandle } from "puppeteer";
 import { ComponentConditionStrategy } from "./ComponentConditionStrategy";
+import { IAsyncFactory } from "./IAsyncFactory";
+import { IDisplayObjectFactory } from "./IDisplayObjectFactory";
 
 export class ComponentFactory<T extends Component>
   implements IAsyncFactory<T>, IDisplayObjectFactory<T> {
