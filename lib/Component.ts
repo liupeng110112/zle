@@ -5,6 +5,7 @@ import { ComponentConstructor } from "./ComponentConstructor";
 
 export abstract class Component {
   static $definition: UIDefinition;
+  protected page = this.$context.$getPage();
 
   constructor(
     public $context: Context,
@@ -39,7 +40,25 @@ export abstract class Component {
     }
   }
 
-  protected async $getElementHandleByName(name: string) {
+  async $textOf(name: string) {
+    const handle = await this.getElementHandleByName(name);
+    const result: string = await this.page.evaluate(
+      (el: HTMLElement) => el.textContent,
+      handle
+    );
+    return result;
+  }
+
+  async $htmlOf(name: string) {
+    const handle = await this.getElementHandleByName(name);
+    const result: string = await this.page.evaluate(
+      (el: HTMLElement) => el.innerHTML,
+      handle
+    );
+    return result;
+  }
+
+  protected async getElementHandleByName(name: string) {
     const constructor = this.constructor as ComponentConstructor<any>;
     if (name === constructor.$definition.name) {
       return this.$handle;
