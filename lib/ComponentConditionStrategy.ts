@@ -1,6 +1,7 @@
 import { DisplayObjectConditionStrategy } from "./Strategies";
 import { ComponentConstructor } from "./ComponentConstructor";
 import { Context } from "./Context";
+import { DEFAULT_WAIT_FOR_TIMEOUT } from "./constants";
 
 export class ComponentConditionStrategy<T extends ComponentConstructor<any>>
   implements DisplayObjectConditionStrategy<T> {
@@ -11,6 +12,9 @@ export class ComponentConditionStrategy<T extends ComponentConstructor<any>>
     timeout?: number,
     selectorPrefix?: string
   ) {
+    if (!timeout) {
+      timeout = DEFAULT_WAIT_FOR_TIMEOUT;
+    }
     const page = this.context.$getPage();
     return Array.from(constructor.$definition.walkUINodes())
       .filter(node => node.satisfying || !node.hasDescendants)
