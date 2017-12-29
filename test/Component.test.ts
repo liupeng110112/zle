@@ -10,7 +10,7 @@ test.beforeEach(async t => {
   });
 });
 
-test.afterEach(async t => {
+test.afterEach.always(async t => {
   await t.context.$getBrowser().close();
 });
 
