@@ -2,8 +2,9 @@ import { Browser, Page } from "puppeteer";
 import { Component } from "./Component";
 import { ComponentFactory } from "./ComponentFactory";
 import { ComponentConstructor } from "./ComponentConstructor";
+import { IDisplayObjectFactory } from "./IDisplayObjectFactory";
 
-export class Context {
+export class Context implements IDisplayObjectFactory<any> {
   container: any = {};
 
   constructor(protected browser: Browser, protected page: Page) {}
@@ -16,11 +17,12 @@ export class Context {
     return this.page;
   }
 
-  async $waitFor<T extends Component>(
+  $waitFor<T extends Component>(
     constructor: ComponentConstructor<T>,
+    timeout?: number,
     ...args: any[]
   ): Promise<T> {
     const factory = new ComponentFactory<T>(this);
-    return factory.$waitFor(constructor, ...args);
+    return factory.$waitFor(constructor, timeout, ...args);
   }
 }
