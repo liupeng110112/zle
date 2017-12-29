@@ -17,6 +17,6 @@ test.afterEach.always(async t => {
 test("#waitFor", async t => {
   const page = await t.context.$getPage();
   await page.goto(getPageUrl("post"));
-  const post = await t.context.$waitFor(Post);
+  const post = await t.context.$waitFor(Post, 1000);
   t.is(post.$selector, "html > body > div:nth-child(1)");
 });

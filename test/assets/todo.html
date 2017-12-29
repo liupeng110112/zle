@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="todo-app">
+    <div class="new-todo">
+      <input onkeypress="check(event)" type="text">
+      <button onclick="submit()">Submit</button>
+    </div>
+    <ol class="todo-list">
+    </ol>
+  </div>
+  <script>
+    function check(evt) {
+      if (evt.keyCode === 13) {
+        submit();
+      }
+    }
+
+    function submit() {
+      const input = document.querySelector('input');
+      if (input.value.trim()) {
+        const list = document.querySelector('.todo-list');
+        const listItem = document.createElement('li');
+        listItem.innerHTML = input.value;
+        list.appendChild(listItem);
+        input.value = '';
+      }
+    }
+  </script>
+</body>
+
+</html>

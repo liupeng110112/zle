@@ -1,4 +1,4 @@
-import { ElementHandle } from "puppeteer";
+import { ElementHandle, ClickOptions } from "puppeteer";
 import { Context } from "./Context";
 import { UIDefinition, UINode } from "./UIDefinition";
 import { ComponentConstructor } from "./ComponentConstructor";
@@ -40,8 +40,27 @@ export abstract class Component {
     }
   }
 
+  async $click(name: string, options?: ClickOptions) {
+    const handle = await this.$getElementHandleByName(name);
+    return handle.click(options);
+  }
+
+  async $press(
+    name: string,
+    key: string,
+    options?: { text?: string; delay?: number }
+  ) {
+    const handle = await this.$getElementHandleByName(name);
+    return handle.press(key, options);
+  }
+
+  async $type(name: string, text: string, options?: { delay: number }) {
+    const handle = await this.$getElementHandleByName(name);
+    return handle.type(text, options);
+  }
+
   async $textOf(name: string) {
-    const handle = await this.getElementHandleByName(name);
+    const handle = await this.$getElementHandleByName(name);
     const result: string = await this.page.evaluate(
       (el: HTMLElement) => el.textContent,
       handle
@@ -50,7 +69,7 @@ export abstract class Component {
   }
 
   async $htmlOf(name: string) {
-    const handle = await this.getElementHandleByName(name);
+    const handle = await this.$getElementHandleByName(name);
     const result: string = await this.page.evaluate(
       (el: HTMLElement) => el.innerHTML,
       handle
@@ -58,7 +77,7 @@ export abstract class Component {
     return result;
   }
 
-  protected async getElementHandleByName(name: string) {
+  async $getElementHandleByName(name: string) {
     const constructor = this.constructor as ComponentConstructor<any>;
     if (name === constructor.$definition.name) {
       return this.$handle;
