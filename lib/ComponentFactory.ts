@@ -27,36 +27,40 @@ export class ComponentFactory<T extends Component>
     scope?: Component
   ) {
     return new Promise<T>(async (resolve, reject) => {
-      const selector = scope
-        ? [await scope.$selector, constructor.$definition.selector].join(" ")
-        : constructor.$definition.selector;
-      const conditions = await this.conditionStrategy.$getConditions(
-        constructor,
-        timeout,
-        selector
-      );
-      await Promise.all(conditions);
-      const page = this.context.$getPage();
-      const handle = await page.$(selector);
-      if (handle) {
-        try {
-          const component = await this.$create(
-            constructor,
-            this.context,
-            handle
-          );
-          resolve(component);
-        } catch (err) {
-          reject(err);
-        }
-      } else {
-        reject(
-          new Error(
-            `Cannot locate component "${
-              constructor.name
-            }" by selector "${selector}"`
-          )
+      try {
+        const selector = scope
+          ? [await scope.$selector, constructor.$definition.selector].join(" ")
+          : constructor.$definition.selector;
+        const conditions = await this.conditionStrategy.$getConditions(
+          constructor,
+          timeout,
+          selector
         );
+        await Promise.all(conditions);
+        const page = this.context.$getPage();
+        const handle = await page.$(selector);
+        if (handle) {
+          try {
+            const component = await this.$create(
+              constructor,
+              this.context,
+              handle
+            );
+            resolve(component);
+          } catch (err) {
+            reject(err);
+          }
+        } else {
+          reject(
+            new Error(
+              `Cannot locate component "${
+                constructor.name
+              }" by selector "${selector}"`
+            )
+          );
+        }
+      } catch (err) {
+        reject(err);
       }
     });
   }
