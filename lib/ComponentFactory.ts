@@ -2,13 +2,13 @@ import { Component } from "./Component";
 import { Context } from "./Context";
 import { ComponentConstructor } from "./ComponentConstructor";
 import { ElementHandle } from "puppeteer";
-import { ComponentConditionStrategy } from "./ComponentConditionStrategy";
+import { ComponentSatisfyingStrategy } from "./ComponentSatisfyingStrategy";
 import { IAsyncFactory } from "./IAsyncFactory";
 import { IDisplayObjectFactory } from "./IDisplayObjectFactory";
 
 export class ComponentFactory<T extends Component>
   implements IAsyncFactory<T>, IDisplayObjectFactory<T> {
-  protected conditionStrategy = new ComponentConditionStrategy(this.context);
+  protected satisfyingStrategy = new ComponentSatisfyingStrategy(this.context);
 
   constructor(protected context: Context) {}
 
@@ -31,12 +31,12 @@ export class ComponentFactory<T extends Component>
         const selector = scope
           ? [await scope.$selector, constructor.$definition.selector].join(" ")
           : constructor.$definition.selector;
-        const conditions = await this.conditionStrategy.$getConditions(
+        const promises = await this.satisfyingStrategy.getStrategy(
           constructor,
           timeout,
           selector
         );
-        await Promise.all(conditions);
+        await Promise.all(promises);
         const page = this.context.$getPage();
         const handle = await page.$(selector);
         if (handle) {
