@@ -1,14 +1,13 @@
 import { Component } from "./Component";
 import { ComponentConstructor } from "./ComponentConstructor";
+import { EvaluateFn } from "puppeteer";
 
-export type SatisfyingFunction = (
-  selector: string
-) => boolean | "visible" | "hidden";
+export type SatisfyingOption = "visible" | "hidden" | EvaluateFn;
 
 export type UINode = {
   selector: string;
   name?: string;
-  satisfying?: SatisfyingFunction;
+  satisfying?: SatisfyingOption;
   hasDescendants?: boolean;
 };
 
@@ -16,14 +15,14 @@ export type UINode = {
 export type Descendant = [
   string | ComponentConstructor<any>,
   string | undefined,
-  SatisfyingFunction | undefined
+  SatisfyingOption | undefined
 ];
 
 export class UIDefinition {
   protected descendants = new Array<Descendant>();
 
-  static root(selector: string, name?: string) {
-    return new UIDefinition(selector, name);
+  static root(selector: string, name?: string, satisfying?: SatisfyingOption) {
+    return new UIDefinition(selector, name, satisfying);
   }
 
   findUINodeByName(name: string) {
@@ -39,7 +38,8 @@ export class UIDefinition {
     yield {
       selector: isDescendant ? this.selector : "",
       name: this.name,
-      hasDescendants: this.descendants.length > 0
+      hasDescendants: this.descendants.length > 0,
+      satisfying: this.satisfying
     };
     for (let [selectorOrConstructor, name, satisfying] of this.descendants) {
       if (typeof selectorOrConstructor === "string") {
@@ -82,11 +82,15 @@ export class UIDefinition {
   withDescendant<T extends Component>(
     selectorOrConstructor: string | ComponentConstructor<T>,
     name?: string,
-    satisfying?: SatisfyingFunction
+    satisfying?: SatisfyingOption
   ): UIDefinition {
     this.descendants.push([selectorOrConstructor, name, satisfying]);
     return this;
   }
 
-  protected constructor(public selector: string, public name?: string) {}
+  protected constructor(
+    public selector: string,
+    public name?: string,
+    public satisfying?: SatisfyingOption
+  ) {}
 }
