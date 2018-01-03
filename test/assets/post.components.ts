@@ -19,8 +19,22 @@ export class CommentComposer extends Component {
   ).withDescendant("input", "comment input field");
 }
 
+export class CommentItem extends Component {
+  static $definition = UIDefinition.root("li.comment", "comment");
+
+  async getContent() {
+    return this.$htmlOf("comment");
+  }
+}
+
 export class CommentList extends Component {
-  static $definition = UIDefinition.root("div.comments ul");
+  static $definition = UIDefinition.root("div.comments ul").withDescendant(
+    CommentItem
+  );
+
+  async getComments() {
+    return this.$selectAll(CommentItem);
+  }
 }
 
 export class Footer extends Component {
