@@ -6,6 +6,8 @@ import { ComponentSatisfyingStrategy } from "./ComponentSatisfyingStrategy";
 import { IAsyncFactory } from "./IAsyncFactory";
 import { IDisplayObjectFactory } from "./IDisplayObjectFactory";
 
+export type SatisfyingFunction<T> = (component: T) => Promise<boolean>;
+
 export class ComponentFactory<T extends Component>
   implements IAsyncFactory<T>, IDisplayObjectFactory<T> {
   protected satisfyingStrategy = new ComponentSatisfyingStrategy(this.context);
@@ -45,6 +47,25 @@ export class ComponentFactory<T extends Component>
           constructor.name
         }" by selector "${selector}"`
       );
+    }
+  }
+
+  async *selectAll(
+    constructor: ComponentConstructor<T>,
+    satisfying?: SatisfyingFunction<T>,
+    scope?: Component
+  ) {
+    const page = this.context.getPage();
+    const selector = scope
+      ? [await scope.$getSelector(), constructor.$definition.selector].join(" ")
+      : constructor.$definition.selector;
+    for (let handle of await page.$$(selector)) {
+      const component = await this.create(constructor, this.context, handle);
+      if (!satisfying || (await satisfying(component))) {
+        yield component;
+      } else {
+        continue;
+      }
     }
   }
 }
