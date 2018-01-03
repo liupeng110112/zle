@@ -11,18 +11,18 @@ test.beforeEach(async t => {
 });
 
 test.afterEach.always(async t => {
-  await t.context.getBrowser().close();
+  await t.context.browser.close();
 });
 
 test("#waitFor", async t => {
-  const page = t.context.getPage();
+  const page = t.context.page;
   await page.goto(getPageUrl("post"));
   const post = await t.context.waitFor(Post, 1000);
   t.is(await post.$getSelector(), "html > body > div:nth-child(1)");
 });
 
 test("#$$", async t => {
-  const page = t.context.getPage();
+  const page = t.context.page;
   await page.goto(getPageUrl("post"));
   const posts = [];
   let index = 0;
@@ -34,7 +34,7 @@ test("#$$", async t => {
 });
 
 test("#$$ with satisfying function", async t => {
-  const page = t.context.getPage();
+  const page = t.context.page;
   await page.goto(getPageUrl("post"));
   const posts = [];
   for await (let post of t.context.$$(

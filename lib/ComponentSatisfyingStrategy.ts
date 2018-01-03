@@ -12,7 +12,7 @@ export class ComponentSatisfyingStrategy<T extends ComponentConstructor<any>>
     if (!timeout) {
       timeout = DEFAULT_WAIT_FOR_TIMEOUT;
     }
-    const page = this.context.getPage();
+    const page = this.context.page;
     return Array.from(constructor.$definition.walkUINodes())
       .filter(node => node.satisfying || !node.hasDescendants)
       .map(node => {

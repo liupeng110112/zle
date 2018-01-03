@@ -36,7 +36,7 @@ export class ComponentFactory<T extends Component>
       selector
     );
     await Promise.all(strategies);
-    const page = this.context.getPage();
+    const page = this.context.page;
     const handle = await page.$(selector);
     if (handle) {
       const component = await this.create(constructor, this.context, handle);
@@ -55,7 +55,7 @@ export class ComponentFactory<T extends Component>
     satisfying?: SatisfyingFunction<T>,
     scope?: Component
   ) {
-    const page = this.context.getPage();
+    const page = this.context.page;
     const selector = scope
       ? [await scope.$getSelector(), constructor.$definition.selector].join(" ")
       : constructor.$definition.selector;
