@@ -12,7 +12,7 @@ export class ComponentFactory<T extends Component>
 
   constructor(protected context: Context) {}
 
-  async $create(
+  async create(
     constructor: ComponentConstructor<T>,
     context: Context,
     handle: ElementHandle
@@ -20,7 +20,7 @@ export class ComponentFactory<T extends Component>
     return new constructor(context, handle);
   }
 
-  $waitFor(
+  waitFor(
     constructor: ComponentConstructor<T>,
     timeout?: number,
     scope?: Component
@@ -32,17 +32,17 @@ export class ComponentFactory<T extends Component>
               " "
             )
           : constructor.$definition.selector;
-        const promises = await this.satisfyingStrategy.getStrategy(
+        const strategies = await this.satisfyingStrategy.getStrategy(
           constructor,
           timeout,
           selector
         );
-        await Promise.all(promises);
-        const page = this.context.$getPage();
+        await Promise.all(strategies);
+        const page = this.context.getPage();
         const handle = await page.$(selector);
         if (handle) {
           try {
-            const component = await this.$create(
+            const component = await this.create(
               constructor,
               this.context,
               handle
