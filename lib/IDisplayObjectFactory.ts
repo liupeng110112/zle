@@ -1,5 +1,5 @@
 export interface IDisplayObjectFactory<T extends {}> {
-  $waitFor(
+  waitFor(
     constrctor: { new (...args: any[]): T },
     timeout?: number,
     ...args: any[]

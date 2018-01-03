@@ -3,7 +3,7 @@ import { launch, LaunchOptions } from "puppeteer";
 import { IAsyncFactory } from "./IAsyncFactory";
 
 export class ContextFactory implements IAsyncFactory<Context> {
-  async $create(options?: LaunchOptions) {
+  async create(options?: LaunchOptions) {
     // Polyfill for "for await"
     // Reference: https://github.com/Microsoft/TypeScript/issues/14151
     // Reference: https://stackoverflow.com/questions/43694281/ts2318-cannot-find-global-type-asynciterableiterator-async-generator
