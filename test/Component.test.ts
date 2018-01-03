@@ -36,8 +36,8 @@ test("#$type", async t => {
   const page = t.context.page;
   await page.goto(getPageUrl("todo"));
   const todoApp = await t.context.waitFor(TodoApp, 1000);
-  await todoApp.$type("input-field", "todo#$type");
-  const inputField = await todoApp.$getElementHandleByName("input-field");
+  await todoApp.$type("input field", "todo#$type");
+  const inputField = await todoApp.$getElementHandleByName("input field");
   const valueHandle = await inputField.getProperty("value");
   const value = await valueHandle.jsonValue();
   t.is(value, "todo#$type");
@@ -47,8 +47,8 @@ test("#$click", async t => {
   const page = t.context.page;
   await page.goto(getPageUrl("todo"));
   const todoApp = await t.context.waitFor(TodoApp, 1000);
-  await todoApp.$type("input-field", "todo#$type");
-  await todoApp.$click("submit-button");
+  await todoApp.$type("input field", "todo#$type");
+  await todoApp.$click("submit button");
   const html = await todoApp.$htmlOf("todo-list");
   t.not(html.indexOf("todo#$type"), -1);
 });
@@ -57,8 +57,8 @@ test("#$press", async t => {
   const page = t.context.page;
   await page.goto(getPageUrl("todo"));
   const todoApp = await t.context.waitFor(TodoApp, 1000);
-  await todoApp.$type("input-field", "todo#$type");
-  await todoApp.$press("input-field", "Enter");
+  await todoApp.$type("input field", "todo#$type");
+  await todoApp.$press("input field", "Enter");
   const html = await todoApp.$htmlOf("todo-list");
   t.not(html.indexOf("todo#$type"), -1);
 });
