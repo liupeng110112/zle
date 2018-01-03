@@ -12,16 +12,16 @@ export class Context {
     constructor: ComponentConstructor<T>,
     timeout?: number
   ): Promise<T> {
-    const factory = new ComponentFactory<T>(this);
-    return factory.waitFor(constructor, timeout);
+    const factory = new ComponentFactory<T>(this, constructor);
+    return factory.waitFor(timeout);
   }
 
   selectAll<T extends Component>(
     constructor: ComponentConstructor<T>,
     satisfying?: SatisfyingFunction<T>
   ) {
-    const factory = new ComponentFactory<T>(this);
-    return factory.selectAll(constructor, satisfying);
+    const factory = new ComponentFactory<T>(this, constructor);
+    return factory.selectAll(satisfying);
   }
 
   $$<T extends Component>(
