@@ -5,7 +5,7 @@ import { ComponentConstructor } from "./ComponentConstructor";
 
 export abstract class Component {
   static $definition: UIDefinition;
-  protected page = this.$context.getPage();
+  protected page = this.$context.page;
 
   constructor(public $context: Context, public $handle: ElementHandle) {}
 
@@ -80,7 +80,7 @@ export abstract class Component {
     } else {
       const node = await this.$findUINodeByName(name);
       if (node) {
-        const page = this.$context.getPage();
+        const page = this.$context.page;
         const selector = node.selector;
         const handle = await page.$(selector);
         if (handle) {
@@ -97,7 +97,7 @@ export abstract class Component {
   }
 
   async $getSelector() {
-    const page = this.$context.getPage();
+    const page = this.$context.page;
     const selector: string | undefined = await page.evaluate(
       (el: HTMLElement) => {
         const segments = new Array<string>();

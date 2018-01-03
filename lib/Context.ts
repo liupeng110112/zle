@@ -6,15 +6,7 @@ import { ComponentConstructor } from "./ComponentConstructor";
 export class Context {
   container: any = {};
 
-  constructor(protected browser: Browser, protected page: Page) {}
-
-  getBrowser() {
-    return this.browser;
-  }
-
-  getPage() {
-    return this.page;
-  }
+  constructor(public browser: Browser, public page: Page) {}
 
   waitFor<T extends Component>(
     constructor: ComponentConstructor<T>,
