@@ -1,6 +1,6 @@
-import { test } from "ava";
-import { UINode } from "../lib/UIDefinition";
-import { Post } from "./assets/post.components";
+import { Post } from './assets/post.components';
+import { test } from 'ava';
+import { UINode } from '../lib/UIDefinition';
 
 test("UIDefinition", t => {
   const definition = Post.$definition;

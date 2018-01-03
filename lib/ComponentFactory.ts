@@ -1,10 +1,10 @@
-import { Component } from "./Component";
-import { Context } from "./Context";
-import { ComponentConstructor } from "./ComponentConstructor";
-import { ElementHandle } from "puppeteer";
-import { ComponentSatisfyingStrategy } from "./ComponentSatisfyingStrategy";
-import { IAsyncFactory } from "./IAsyncFactory";
-import { IDisplayObjectFactory } from "./IDisplayObjectFactory";
+import { Component } from './Component';
+import { ComponentConstructor } from './ComponentConstructor';
+import { ComponentSatisfyingStrategy } from './ComponentSatisfyingStrategy';
+import { Context } from './Context';
+import { ElementHandle } from 'puppeteer';
+import { IAsyncFactory } from './IAsyncFactory';
+import { IDisplayObjectFactory } from './IDisplayObjectFactory';
 
 export type SatisfyingFunction<T> = (component: T) => Promise<boolean>;
 

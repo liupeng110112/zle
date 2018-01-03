@@ -1,9 +1,6 @@
-import * as fs from "fs";
-import * as http from "http";
-import {
-  DEFAULT_TESTING_SERVER_PORT,
-  DEFAULT_PUPPETEER_EXECUTABLE_PATH
-} from "./constants";
+import * as fs from 'fs';
+import * as http from 'http';
+import { DEFAULT_PUPPETEER_EXECUTABLE_PATH, DEFAULT_TESTING_SERVER_PORT } from './constants';
 
 export function getExecutablePath() {
   let executablePath = DEFAULT_PUPPETEER_EXECUTABLE_PATH;

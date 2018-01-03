@@ -1,8 +1,8 @@
-import { ISatisfyingStrategy } from "./ISatisfyingStrategy";
-import { ComponentConstructor } from "./ComponentConstructor";
-import { Context } from "./Context";
-import { DEFAULT_WAIT_FOR_TIMEOUT } from "./constants";
-import { setTimeout } from "timers";
+import { ComponentConstructor } from './ComponentConstructor';
+import { Context } from './Context';
+import { DEFAULT_WAIT_FOR_TIMEOUT } from './constants';
+import { ISatisfyingStrategy } from './ISatisfyingStrategy';
+import { setTimeout } from 'timers';
 
 export class ComponentSatisfyingStrategy<T extends ComponentConstructor<any>>
   implements ISatisfyingStrategy<T> {

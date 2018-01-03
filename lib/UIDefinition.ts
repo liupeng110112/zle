@@ -1,6 +1,6 @@
-import { Component } from "./Component";
-import { ComponentConstructor } from "./ComponentConstructor";
-import { EvaluateFn } from "puppeteer";
+import { Component } from './Component';
+import { ComponentConstructor } from './ComponentConstructor';
+import { EvaluateFn } from 'puppeteer';
 
 export type SatisfyingOption = "visible" | "hidden" | EvaluateFn;
 

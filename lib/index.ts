@@ -1,4 +1,4 @@
-import { test as ava_test, RegisterContextual } from "ava";
-import { Context } from "./Context";
+import { Context } from './Context';
+import { RegisterContextual, test as ava_test } from 'ava';
 
 export const test: RegisterContextual<Context> = ava_test;
