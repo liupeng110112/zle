@@ -66,6 +66,6 @@ test("#$press", async t => {
 test("satisfying feature", async t => {
   const page = await t.context.$getPage();
   await page.goto(getPageUrl("rect"));
-  await t.context.$waitFor(Rect, 1000);
+  await t.context.$waitFor(Rect, 2000);
   t.pass();
 });
