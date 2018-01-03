@@ -17,7 +17,7 @@ test.afterEach.always(async t => {
 });
 
 test("#$textOf", async t => {
-  const page = await t.context.$getPage();
+  const page = t.context.$getPage();
   await page.goto(getPageUrl("post"));
   const post = await t.context.$waitFor(Post);
   const title = await post.$textOf("post title");
@@ -25,7 +25,7 @@ test("#$textOf", async t => {
 });
 
 test("#$htmlOf", async t => {
-  const page = await t.context.$getPage();
+  const page = t.context.$getPage();
   await page.goto(getPageUrl("post"));
   const post = await t.context.$waitFor(Post);
   const html = await post.$htmlOf("post header");
@@ -33,7 +33,7 @@ test("#$htmlOf", async t => {
 });
 
 test("#$type", async t => {
-  const page = await t.context.$getPage();
+  const page = t.context.$getPage();
   await page.goto(getPageUrl("todo"));
   const todoApp = await t.context.$waitFor(TodoApp, 1000);
   await todoApp.$type("input-field", "todo#$type");
@@ -44,7 +44,7 @@ test("#$type", async t => {
 });
 
 test("#$click", async t => {
-  const page = await t.context.$getPage();
+  const page = t.context.$getPage();
   await page.goto(getPageUrl("todo"));
   const todoApp = await t.context.$waitFor(TodoApp, 1000);
   await todoApp.$type("input-field", "todo#$type");
@@ -54,7 +54,7 @@ test("#$click", async t => {
 });
 
 test("#$press", async t => {
-  const page = await t.context.$getPage();
+  const page = t.context.$getPage();
   await page.goto(getPageUrl("todo"));
   const todoApp = await t.context.$waitFor(TodoApp, 1000);
   await todoApp.$type("input-field", "todo#$type");
@@ -64,7 +64,7 @@ test("#$press", async t => {
 });
 
 test("satisfying feature", async t => {
-  const page = await t.context.$getPage();
+  const page = t.context.$getPage();
   await page.goto(getPageUrl("rect"));
   await t.context.$waitFor(Rect, 2000);
   t.pass();
