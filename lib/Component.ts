@@ -7,14 +7,10 @@ export abstract class Component {
   static $definition: UIDefinition;
   protected page = this.$context.$getPage();
 
-  constructor(
-    public $context: Context,
-    public $handle: ElementHandle,
-    public $selector: string
-  ) {}
+  constructor(public $context: Context, public $handle: ElementHandle) {}
 
-  $findUINodeByName(name: string) {
-    for (let node of this.$walkUINodes()) {
+  async $findUINodeByName(name: string) {
+    for await (let node of this.$walkUINodes()) {
       if (node.name === name) {
         return node;
       }
@@ -22,17 +18,17 @@ export abstract class Component {
     return undefined;
   }
 
-  *$walkUINodes(): IterableIterator<UINode> {
+  async *$walkUINodes(): AsyncIterableIterator<UINode> {
     const constructor = this.constructor as ComponentConstructor<any>;
-    const selectorPrefix = this.$selector;
-    for (let {
+    const scopeSelector = await this.$getSelector();
+    for await (let {
       selector,
       name,
       satisfying,
       hasDescendants
     } of constructor.$definition.walkUINodes()) {
       yield {
-        selector: [selectorPrefix, selector].join(" "),
+        selector: [scopeSelector, selector].join(" "),
         name,
         satisfying,
         hasDescendants
@@ -82,7 +78,7 @@ export abstract class Component {
     if (name === constructor.$definition.name) {
       return this.$handle;
     } else {
-      const node = this.$findUINodeByName(name);
+      const node = await this.$findUINodeByName(name);
       if (node) {
         const page = this.$context.$getPage();
         const selector = node.selector;
@@ -97,6 +93,44 @@ export abstract class Component {
       } else {
         throw new Error(`Cannot find UINode by name "${name}"`);
       }
+    }
+  }
+
+  async $getSelector() {
+    const page = this.$context.$getPage();
+    const selector: string | undefined = await page.evaluate(
+      (el: HTMLElement) => {
+        const segments = new Array<string>();
+        let node = el;
+        while (node) {
+          const parent = node.parentElement!;
+          if (parent) {
+            const siblings = Array.from(parent.children).filter(el => {
+              return el.localName === node.localName;
+            });
+            if (siblings.length > 1) {
+              segments.push(
+                `${node.localName}:nth-child(${siblings.indexOf(node) + 1})`
+              );
+            } else {
+              segments.push(node.localName!);
+            }
+          } else if (node.localName === "html") {
+            segments.push(node.localName!);
+          } else {
+            return undefined;
+          }
+          node = parent;
+        }
+        segments.reverse();
+        return segments.join(" > ");
+      },
+      this.$handle
+    );
+    if (selector) {
+      return selector;
+    } else {
+      throw new Error(`Component ${this} is break away from DOM`);
     }
   }
 }

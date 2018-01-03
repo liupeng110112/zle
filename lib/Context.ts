@@ -4,6 +4,8 @@ import { ComponentFactory } from "./ComponentFactory";
 import { ComponentConstructor } from "./ComponentConstructor";
 import { IDisplayObjectFactory } from "./IDisplayObjectFactory";
 
+// type SatisfyingFunction = (el: Component) => boolean;
+
 export class Context implements IDisplayObjectFactory<any> {
   container: any = {};
 
@@ -25,4 +27,9 @@ export class Context implements IDisplayObjectFactory<any> {
     const factory = new ComponentFactory<T>(this);
     return factory.$waitFor(constructor, timeout, ...args);
   }
+
+  // $<T extends Component>(
+  //   constructor: ComponentConstructor<T>,
+  //   scope?: Component
+  // ) {}
 }

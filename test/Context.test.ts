@@ -18,5 +18,5 @@ test("#waitFor", async t => {
   const page = t.context.$getPage();
   await page.goto(getPageUrl("post"));
   const post = await t.context.$waitFor(Post, 1000);
-  t.is(post.$selector, "html > body > div:nth-child(1)");
+  t.is(await post.$getSelector(), "html > body > div:nth-child(1)");
 });

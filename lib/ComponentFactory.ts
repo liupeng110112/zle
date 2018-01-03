@@ -17,8 +17,7 @@ export class ComponentFactory<T extends Component>
     context: Context,
     handle: ElementHandle
   ) {
-    const selector = await getCSSPath(context, handle);
-    return new constructor(context, handle, selector);
+    return new constructor(context, handle);
   }
 
   $waitFor(
@@ -29,7 +28,9 @@ export class ComponentFactory<T extends Component>
     return new Promise<T>(async (resolve, reject) => {
       try {
         const selector = scope
-          ? [await scope.$selector, constructor.$definition.selector].join(" ")
+          ? [await scope.$getSelector(), constructor.$definition.selector].join(
+              " "
+            )
           : constructor.$definition.selector;
         const promises = await this.satisfyingStrategy.getStrategy(
           constructor,
@@ -64,33 +65,4 @@ export class ComponentFactory<T extends Component>
       }
     });
   }
-}
-
-async function getCSSPath(context: Context, handle: ElementHandle) {
-  const page = context.$getPage();
-  const path: string = await page.evaluate((el: HTMLElement) => {
-    const segments = new Array<string>();
-    let node = el;
-    while (node) {
-      const parent = node.parentElement!;
-      if (parent) {
-        const siblings = Array.from(parent.children).filter(el => {
-          return el.localName === node.localName;
-        });
-        if (siblings.length > 1) {
-          segments.push(
-            `${node.localName}:nth-child(${siblings.indexOf(node) + 1})`
-          );
-        } else {
-          segments.push(node.localName!); // only child
-        }
-      } else {
-        segments.push(node.localName!); // met element 'html'
-      }
-      node = parent;
-    }
-    segments.reverse();
-    return segments.join(" > ");
-  }, handle);
-  return path;
 }
