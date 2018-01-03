@@ -24,7 +24,7 @@ test("UIDefinition", t => {
   const commentList = definition.findUINodeByName("comments")!;
   t.deepEqual(commentList.selector, "footer div.comments ul");
   t.is(commentList.name, "comments");
-  t.falsy(commentList.hasDescendants);
+  t.truthy(commentList.hasDescendants);
 
   const expections: Array<UINode> = [
     {
@@ -75,6 +75,11 @@ test("UIDefinition", t => {
     {
       selector: "footer div.comments ul",
       name: "comments",
+      hasDescendants: true
+    },
+    {
+      selector: "footer div.comments ul li.comment",
+      name: "comment",
       hasDescendants: false
     }
   ];

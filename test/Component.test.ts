@@ -1,6 +1,6 @@
+import { CommentItem, Post } from './assets/post.components';
 import { ContextFactory } from '../lib/ContextFactory';
 import { getExecutablePath, getPageUrl } from './helpers';
-import { Post } from './assets/post.components';
 import { Rect } from './assets/rect.components';
 import { test } from '../lib/index';
 import { TodoApp } from './assets/todo.components';
@@ -63,9 +63,47 @@ test("#$press", async t => {
   t.not(html.indexOf("todo#$type"), -1);
 });
 
-test("satisfying feature", async t => {
+test("UIDefinition's satisfying", async t => {
   const page = t.context.page;
   await page.goto(getPageUrl("rect"));
   await t.context.waitFor(Rect, 2000);
   t.pass();
+});
+
+test("#$$", async t => {
+  const page = t.context.page;
+  await page.goto(getPageUrl("post"));
+  const post = await t.context.$(
+    Post,
+    async post => (await post.getTitle()) === "Post 3"
+  );
+  const comments = new Array<CommentItem>();
+  let index = 1;
+  for await (let comment of post!.$$(CommentItem)) {
+    t.is(await comment.getContent(), `3#comment ${index++}`);
+    comments.push(comment);
+  }
+  t.is(comments.length, 3);
+});
+
+test("#$_", async t => {
+  const page = t.context.page;
+  await page.goto(getPageUrl("post"));
+  const post = (await t.context.$(
+    Post,
+    async post => (await post.getTitle()) === "Post 3"
+  ))!;
+  const comment = await post.$_(CommentItem);
+  t.is(comment, undefined);
+});
+
+test("#$", async t => {
+  const page = t.context.page;
+  await page.goto(getPageUrl("post"));
+  const post = (await t.context.$(
+    Post,
+    async post => (await post.getTitle()) === "Post 3"
+  ))!;
+  const comment = await post.$(CommentItem);
+  t.is(await comment!.getContent(), "3#comment 1");
 });

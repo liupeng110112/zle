@@ -77,7 +77,10 @@ export class ComponentFactory<T extends Component>
 
   async getSelector() {
     if (this.scope) {
-      return await this.scope.$getSelector();
+      return [
+        await this.scope.$getSelector(),
+        this._constructor.$definition.selector
+      ].join(" ");
     } else {
       return this._constructor.$definition.selector;
     }
