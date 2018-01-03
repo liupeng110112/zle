@@ -3,6 +3,7 @@ import { test } from "../lib/index";
 import { Post } from "./assets/post.components";
 import { ContextFactory } from "../lib/ContextFactory";
 import { TodoApp } from "./assets/todo.components";
+import { Rect } from "./assets/rect.components";
 
 test.beforeEach(async t => {
   const factory = new ContextFactory();
@@ -60,4 +61,11 @@ test("#$press", async t => {
   await todoApp.$press("input-field", "Enter");
   const html = await todoApp.$htmlOf("todo-list");
   t.not(html.indexOf("todo#$type"), -1);
+});
+
+test("satisfying feature", async t => {
+  const page = await t.context.$getPage();
+  await page.goto(getPageUrl("rect"));
+  await t.context.$waitFor(Rect, 1000);
+  t.pass();
 });
