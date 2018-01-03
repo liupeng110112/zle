@@ -1,18 +1,14 @@
-import { IConditionStrategy } from "./IConditionStrategy";
+import { ISatisfyingStrategy } from "./ISatisfyingStrategy";
 import { ComponentConstructor } from "./ComponentConstructor";
 import { Context } from "./Context";
 import { DEFAULT_WAIT_FOR_TIMEOUT } from "./constants";
 import { setTimeout } from "timers";
 
-export class ComponentConditionStrategy<T extends ComponentConstructor<any>>
-  implements IConditionStrategy<T> {
+export class ComponentSatisfyingStrategy<T extends ComponentConstructor<any>>
+  implements ISatisfyingStrategy<T> {
   constructor(protected context: Context) {}
 
-  async $getConditions(
-    constructor: T,
-    timeout?: number,
-    selectorPrefix?: string
-  ) {
+  async getStrategy(constructor: T, timeout?: number, selectorPrefix?: string) {
     if (!timeout) {
       timeout = DEFAULT_WAIT_FOR_TIMEOUT;
     }
