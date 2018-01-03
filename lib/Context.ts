@@ -2,9 +2,8 @@ import { Browser, Page } from "puppeteer";
 import { Component } from "./Component";
 import { ComponentFactory, SatisfyingFunction } from "./ComponentFactory";
 import { ComponentConstructor } from "./ComponentConstructor";
-import { IDisplayObjectFactory } from "./IDisplayObjectFactory";
 
-export class Context implements IDisplayObjectFactory<any> {
+export class Context {
   container: any = {};
 
   constructor(protected browser: Browser, protected page: Page) {}
@@ -19,11 +18,10 @@ export class Context implements IDisplayObjectFactory<any> {
 
   waitFor<T extends Component>(
     constructor: ComponentConstructor<T>,
-    timeout?: number,
-    ...args: any[]
+    timeout?: number
   ): Promise<T> {
     const factory = new ComponentFactory<T>(this);
-    return factory.waitFor(constructor, timeout, ...args);
+    return factory.waitFor(constructor, timeout);
   }
 
   selectAll<T extends Component>(
