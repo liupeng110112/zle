@@ -1,7 +1,7 @@
-import { Browser, Page } from "puppeteer";
-import { Component } from "./Component";
-import { ComponentFactory, SatisfyingFunction } from "./ComponentFactory";
-import { ComponentConstructor } from "./ComponentConstructor";
+import { Browser, Page } from 'puppeteer';
+import { Component } from './Component';
+import { ComponentConstructor } from './ComponentConstructor';
+import { ComponentFactory, SatisfyingFunction } from './ComponentFactory';
 
 export class Context {
   container: any = {};

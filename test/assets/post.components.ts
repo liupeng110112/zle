@@ -1,5 +1,5 @@
-import { UIDefinition } from "../../lib/UIDefinition";
-import { Component } from "../../lib/Component";
+import { Component } from '../../lib/Component';
+import { UIDefinition } from '../../lib/UIDefinition';
 
 export class Nav extends Component {
   static $definition = UIDefinition.root("nav");

@@ -1,5 +1,5 @@
-import { exec } from "child_process";
-import { getPort } from "../helpers";
+import { exec } from 'child_process';
+import { getPort } from '../helpers';
 
 const port = getPort();
 exec(`kill $(lsof -t -i:${port})`, err => {

@@ -1,9 +1,9 @@
-import { getExecutablePath, getPageUrl } from "./helpers";
-import { test } from "../lib/index";
-import { Post } from "./assets/post.components";
-import { ContextFactory } from "../lib/ContextFactory";
-import { TodoApp } from "./assets/todo.components";
-import { Rect } from "./assets/rect.components";
+import { ContextFactory } from '../lib/ContextFactory';
+import { getExecutablePath, getPageUrl } from './helpers';
+import { Post } from './assets/post.components';
+import { Rect } from './assets/rect.components';
+import { test } from '../lib/index';
+import { TodoApp } from './assets/todo.components';
 
 test.beforeEach(async t => {
   const factory = new ContextFactory();

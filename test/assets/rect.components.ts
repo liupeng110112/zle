@@ -1,5 +1,5 @@
-import { Component } from "../../lib/Component";
-import { UIDefinition } from "../../lib/UIDefinition";
+import { Component } from '../../lib/Component';
+import { UIDefinition } from '../../lib/UIDefinition';
 
 export class Rect extends Component {
   static $definition = UIDefinition.root(

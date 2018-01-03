@@ -1,7 +1,7 @@
-import { UIDefinition } from "./UIDefinition";
-import { Component } from "./Component";
-import { ElementHandle } from "puppeteer";
-import { Context } from "./Context";
+import { Component } from './Component';
+import { Context } from './Context';
+import { ElementHandle } from 'puppeteer';
+import { UIDefinition } from './UIDefinition';
 
 export interface ComponentConstructor<T extends Component> {
   $definition: UIDefinition;

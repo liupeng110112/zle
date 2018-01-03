@@ -1,6 +1,6 @@
-import { Context } from "./Context";
-import { launch, LaunchOptions } from "puppeteer";
-import { IAsyncFactory } from "./IAsyncFactory";
+import { Context } from './Context';
+import { IAsyncFactory } from './IAsyncFactory';
+import { launch, LaunchOptions } from 'puppeteer';
 
 export class ContextFactory implements IAsyncFactory<Context> {
   async create(options?: LaunchOptions) {

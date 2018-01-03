@@ -1,7 +1,7 @@
-import { ElementHandle, ClickOptions } from "puppeteer";
-import { Context } from "./Context";
-import { UIDefinition, UINode } from "./UIDefinition";
-import { ComponentConstructor } from "./ComponentConstructor";
+import { ClickOptions, ElementHandle } from 'puppeteer';
+import { ComponentConstructor } from './ComponentConstructor';
+import { Context } from './Context';
+import { UIDefinition, UINode } from './UIDefinition';
 
 export abstract class Component {
   static $definition: UIDefinition;
