@@ -1,11 +1,10 @@
 import { Browser, Page } from "puppeteer";
 import { Component } from "./Component";
-import { ComponentFactory } from "./ComponentFactory";
+import { ComponentFactory, SatisfyingFunction } from "./ComponentFactory";
 import { ComponentConstructor } from "./ComponentConstructor";
+import { IDisplayObjectFactory } from "./IDisplayObjectFactory";
 
-// type SatisfyingFunction = (el: Component) => boolean;
-
-export class Context {
+export class Context implements IDisplayObjectFactory<any> {
   container: any = {};
 
   constructor(protected browser: Browser, protected page: Page) {}
@@ -27,8 +26,18 @@ export class Context {
     return factory.waitFor(constructor, timeout, ...args);
   }
 
-  // $<T extends Component>(
-  //   constructor: ComponentConstructor<T>,
-  //   scope?: Component
-  // ) {}
+  selectAll<T extends Component>(
+    constructor: ComponentConstructor<T>,
+    satisfying?: SatisfyingFunction<T>
+  ) {
+    const factory = new ComponentFactory<T>(this);
+    return factory.selectAll(constructor, satisfying);
+  }
+
+  $$<T extends Component>(
+    constructor: ComponentConstructor<T>,
+    satisfying?: SatisfyingFunction<T>
+  ) {
+    return this.selectAll(constructor, satisfying);
+  }
 }

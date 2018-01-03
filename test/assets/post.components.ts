@@ -36,4 +36,8 @@ export class Post extends Component {
     .withDescendant(Nav)
     .withDescendant(Header, "post header")
     .withDescendant(Footer);
+
+  async getTitle() {
+    return await this.$htmlOf("post title");
+  }
 }
