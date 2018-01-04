@@ -1,8 +1,7 @@
 import { Context } from './Context';
-import { IAsyncFactory } from './IAsyncFactory';
 import { launch, LaunchOptions } from 'puppeteer';
 
-export class ContextFactory implements IAsyncFactory<Context> {
+export class ContextFactory {
   async create(options?: LaunchOptions) {
     // Polyfill for "for await"
     // Reference: https://github.com/Microsoft/TypeScript/issues/14151
