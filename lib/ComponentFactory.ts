@@ -1,7 +1,7 @@
 import { Component } from './Component';
 import { ComponentConstructor } from './ComponentConstructor';
-import { ComponentSatisfyingStrategy } from './ComponentSatisfyingStrategy';
 import { Context } from './Context';
+import { DEFAULT_WAIT_FOR_TIMEOUT } from './constants';
 import { ElementHandle } from 'puppeteer';
 import { IAsyncFactory } from './IAsyncFactory';
 import { IDisplayObjectFactory } from './IDisplayObjectFactory';
@@ -18,26 +18,6 @@ export class ComponentFactory<T extends Component>
 
   async create(handle: ElementHandle) {
     return new this._constructor(this.context, handle);
-  }
-
-  async waitFor(timeout?: number) {
-    const selector = await this.getComponentSelector();
-    const strategy = new ComponentSatisfyingStrategy(this.context);
-    await Promise.all(
-      await strategy.getStrategy(this._constructor, timeout, selector)
-    );
-    const page = this.context.page;
-    const handle = await page.$(selector);
-    if (handle) {
-      const component = await this.create(handle);
-      return component;
-    } else {
-      throw new Error(
-        `Cannot locate component "${
-          this._constructor.name
-        }" by selector "${selector}"`
-      );
-    }
   }
 
   async *selectAll(satisfying?: SelectSatisfying<T>) {
@@ -77,6 +57,53 @@ export class ComponentFactory<T extends Component>
       break;
     }
     return firstComponent;
+  }
+
+  async waitFor(timeout?: number) {
+    if (!timeout) {
+      timeout = DEFAULT_WAIT_FOR_TIMEOUT;
+    }
+    const selector = await this.getComponentSelector();
+    const page = this.context.page;
+    await Promise.all(
+      Array.from(this._constructor.$definition.walkUINodes())
+        .filter(node => node.satisfying || !node.hasDescendants)
+        .map(node => {
+          const nodeSelector = [selector, node.selector].join(" ");
+          if (node.satisfying === "visible") {
+            return page.waitForSelector(nodeSelector, {
+              visible: true,
+              timeout
+            });
+          } else if (node.satisfying === "hidden") {
+            return page.waitForSelector(nodeSelector, {
+              visible: false,
+              timeout
+            });
+          } else if (node.satisfying) {
+            return new Promise<void>(async (resolve, reject) => {
+              setTimeout(() => reject(`Time exceed: ${timeout}ms`), timeout!);
+              await page.waitForSelector(nodeSelector);
+              const handle = await page.$(nodeSelector);
+              await page.evaluate(node.satisfying!, handle);
+              resolve();
+            });
+          } else {
+            return page.waitForSelector(nodeSelector, { timeout });
+          }
+        })
+    );
+    const handle = await page.$(selector);
+    if (handle) {
+      const component = await this.create(handle);
+      return component;
+    } else {
+      throw new Error(
+        `Cannot locate component "${
+          this._constructor.name
+        }" by selector "${selector}"`
+      );
+    }
   }
 
   protected async getComponentSelector() {
