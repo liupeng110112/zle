@@ -24,8 +24,8 @@ test("#waitFor with component", async t => {
 });
 
 test("#waitFor with page object", async t => {
-  const url = getPageUrl("site");
-  const page = await t.context.waitFor(SitePage, { url });
+  await t.context.page.goto(getPageUrl("site"));
+  const page = await t.context.waitFor(SitePage);
   t.truthy(page instanceof SitePage);
 });
 

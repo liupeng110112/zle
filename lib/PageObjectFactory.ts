@@ -5,8 +5,7 @@ import { PageObjectConstructor } from './PageObjectConstructor';
 export class PageObjectFactory<T> {
   constructor(
     protected context: Context,
-    protected _constructor: PageObjectConstructor<T>,
-    protected url?: string
+    protected _constructor: PageObjectConstructor<T>
   ) {}
 
   create() {
@@ -15,11 +14,12 @@ export class PageObjectFactory<T> {
 
   async waitFor(timeout?: number) {
     timeout = timeout || DEFAULT_WAIT_FOR_TIMEOUT;
-    const url = this.url || this._constructor.$url;
     const page = this.context.page;
-    await page.goto(url!, { timeout });
+    if (this._constructor.$url) {
+      await page.goto(this._constructor.$url, { timeout });
+    }
     for (let component of this._constructor.$initialComponents) {
-      await this.context.waitFor(component, { timeout });
+      await this.context.waitFor(component, timeout);
     }
     return this.create();
   }

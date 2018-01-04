@@ -6,11 +6,6 @@ import { DisplayObjectConstructor } from './DisplayObjectConstructor';
 import { DisplayObjectFactory } from './DisplayObjectFactory';
 import { PageObjectFactory } from './PageObjectFactory';
 
-export type WaitForOptions = {
-  timeout?: number;
-  url?: string;
-};
-
 export class Context {
   container: any = {};
 
@@ -18,16 +13,15 @@ export class Context {
 
   waitFor<T>(
     constructor: DisplayObjectConstructor<T>,
-    options?: WaitForOptions
+    timeout?: number
   ): Promise<T> {
-    options = options || {};
     let factory: DisplayObjectFactory<T>;
     if (constructor.$kind === "Component") {
       factory = new ComponentFactory(this, constructor);
     } else {
-      factory = new PageObjectFactory(this, constructor, options.url);
+      factory = new PageObjectFactory(this, constructor);
     }
-    return factory.waitFor(options.timeout);
+    return factory.waitFor(timeout);
   }
 
   selectAll = <T extends Component>(
