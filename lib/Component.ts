@@ -137,10 +137,8 @@ export abstract class Component {
         while (node) {
           const parent = node.parentElement!;
           if (parent) {
-            const siblings = Array.from(parent.children).filter(el => {
-              return el.localName === node.localName;
-            });
-            if (siblings.length > 1) {
+            const siblings = Array.from(parent.children);
+            if (node.localName !== "body" && siblings.length > 1) {
               segments.push(
                 `${node.localName}:nth-child(${siblings.indexOf(node) + 1})`
               );
