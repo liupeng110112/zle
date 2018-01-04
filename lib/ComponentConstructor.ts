@@ -5,5 +5,5 @@ import { UIDefinition } from './UIDefinition';
 export interface ComponentConstructor<T> {
   $kind: "Component";
   $definition: UIDefinition;
-  new ($context: Context, $handle: ElementHandle): T;
+  new ($context: Context, $elementHandle: ElementHandle): T;
 }

@@ -9,7 +9,7 @@ export abstract class Component {
   static $definition: UIDefinition;
   protected page = this.$context.page;
 
-  constructor(public $context: Context, public $handle: ElementHandle) {}
+  constructor(public $context: Context, public $elementHandle: ElementHandle) {}
 
   async $findUINodeByName(name: string) {
     for await (let node of this.$walkUINodes()) {
@@ -80,7 +80,7 @@ export abstract class Component {
   async $getElementHandleByName(name: string) {
     const constructor = this.constructor as ComponentConstructor<any>;
     if (name === constructor.$definition.name) {
-      return this.$handle;
+      return this.$elementHandle;
     } else {
       const node = await this.$findUINodeByName(name);
       if (node) {
@@ -155,7 +155,7 @@ export abstract class Component {
         segments.reverse();
         return segments.join(" > ");
       },
-      this.$handle
+      this.$elementHandle
     );
     if (selector) {
       return selector;
