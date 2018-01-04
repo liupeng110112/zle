@@ -1,13 +1,12 @@
 import { Component } from './Component';
 import { ComponentConstructor } from './ComponentConstructor';
-import { EvaluateFn } from 'puppeteer';
 
-export type SatisfyingOption = "visible" | "hidden" | EvaluateFn;
-
+export type UISatisfyingFunction = (el: HTMLElement) => void;
+export type UISatisfying = "visible" | "hidden" | UISatisfyingFunction;
 export type UINode = {
   selector: string;
   name?: string;
-  satisfying?: SatisfyingOption;
+  satisfying?: UISatisfying;
   hasDescendants?: boolean;
 };
 
@@ -15,13 +14,13 @@ export type UINode = {
 export type Descendant = [
   string | ComponentConstructor<any>,
   string | undefined,
-  SatisfyingOption | undefined
+  UISatisfying | undefined
 ];
 
 export class UIDefinition {
   protected descendants = new Array<Descendant>();
 
-  static root(selector: string, name?: string, satisfying?: SatisfyingOption) {
+  static root(selector: string, name?: string, satisfying?: UISatisfying) {
     return new UIDefinition(selector, name, satisfying);
   }
 
@@ -82,7 +81,7 @@ export class UIDefinition {
   withDescendant<T extends Component>(
     selectorOrConstructor: string | ComponentConstructor<T>,
     name?: string,
-    satisfying?: SatisfyingOption
+    satisfying?: UISatisfying
   ): UIDefinition {
     this.descendants.push([selectorOrConstructor, name, satisfying]);
     return this;
@@ -91,6 +90,6 @@ export class UIDefinition {
   protected constructor(
     public selector: string,
     public name?: string,
-    public satisfying?: SatisfyingOption
+    public satisfying?: UISatisfying
   ) {}
 }

@@ -6,7 +6,7 @@ import { ElementHandle } from 'puppeteer';
 import { IAsyncFactory } from './IAsyncFactory';
 import { IDisplayObjectFactory } from './IDisplayObjectFactory';
 
-export type SatisfyingFunction<T> = (component: T) => Promise<boolean>;
+export type SelectSatisfying<T> = (component: T) => Promise<boolean>;
 
 export class ComponentFactory<T extends Component>
   implements IAsyncFactory<T>, IDisplayObjectFactory<T> {
@@ -40,7 +40,7 @@ export class ComponentFactory<T extends Component>
     }
   }
 
-  async *selectAll(satisfying?: SatisfyingFunction<T>) {
+  async *selectAll(satisfying?: SelectSatisfying<T>) {
     const page = this.context.page;
     const selector = await this.getSelector();
     for (let handle of await page.$$(selector)) {
@@ -53,7 +53,7 @@ export class ComponentFactory<T extends Component>
     }
   }
 
-  async selectUnique(satisfying?: SatisfyingFunction<T>) {
+  async selectUnique(satisfying?: SelectSatisfying<T>) {
     let uniqueComponent: T | undefined;
     for await (let component of this.selectAll(satisfying)) {
       if (uniqueComponent) {
@@ -66,7 +66,7 @@ export class ComponentFactory<T extends Component>
     return uniqueComponent;
   }
 
-  async selectFirst(satisfying?: SatisfyingFunction<T>) {
+  async selectFirst(satisfying?: SelectSatisfying<T>) {
     let firstComponent: T | undefined;
     for await (let component of this.selectAll(satisfying)) {
       firstComponent = component;
