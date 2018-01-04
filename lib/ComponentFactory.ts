@@ -1,7 +1,7 @@
 import { Component } from './Component';
 import { ComponentConstructor } from './ComponentConstructor';
 import { Context } from './Context';
-import { DEFAULT_WAIT_FOR_TIMEOUT } from './constants';
+import { DEFAULT_WAIT_FOR_TIMEOUT } from './index';
 import { ElementHandle } from 'puppeteer';
 
 export type SelectSatisfying<T> = (component: T) => Promise<boolean>;

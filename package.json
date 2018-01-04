@@ -27,6 +27,7 @@
       "NEON_TESTING_OPTIONS='$NEON_TESTING_OPTIONS --watch' yarn test",
     "test:cov":
       "./node_modules/.bin/nyc --reporter=text --reporter=html yarn test",
+    "build": "yarn test && yarn run tsc:build",
     "mkdoc": "./node_modules/.bin/typedoc --out doc lib/"
   }
 }
