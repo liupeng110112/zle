@@ -51,7 +51,16 @@ test("#$$ with satisfying function", async t => {
 test("#$_ with not unique component", async t => {
   const page = t.context.page;
   await page.goto(getPageUrl("post"));
-  t.is(await t.context.$_(Post), undefined);
+  try {
+    await t.context.$_(Post);
+  } catch (err) {
+    if (err instanceof Error) {
+      t.is(
+        err.message,
+        'Component "Post" is not unique by selector "div.post"'
+      );
+    }
+  }
 });
 
 test("#$_ with unique component", async t => {
