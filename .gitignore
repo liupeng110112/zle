@@ -59,8 +59,7 @@ typings/
 
 lib/**/*.js
 lib/**/*.map
-
 test/**/*.js
 test/**/*.map
-
 doc/
+dist/

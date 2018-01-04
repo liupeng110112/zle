@@ -18,6 +18,7 @@
   "scripts": {
     "tsc": "./node_modules/.bin/tsc",
     "tsc:auto": "./node_modules/.bin/tsc --watch",
+    "tsc:build": "./node_modules/.bin/tsc -p tsconfig.build.json",
     "test":
       "./node_modules/.bin/ava test/**/*.test.js $NEON_TESTING_OPTIONS || true",
     "test:cov":
