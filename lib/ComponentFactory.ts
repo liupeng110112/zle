@@ -21,7 +21,7 @@ export class ComponentFactory<T extends Component>
   }
 
   async waitFor(timeout?: number) {
-    const selector = await this.getSelector();
+    const selector = await this.getComponentSelector();
     const strategy = new ComponentSatisfyingStrategy(this.context);
     await Promise.all(
       await strategy.getStrategy(this._constructor, timeout, selector)
@@ -42,7 +42,7 @@ export class ComponentFactory<T extends Component>
 
   async *selectAll(satisfying?: SelectSatisfying<T>) {
     const page = this.context.page;
-    const selector = await this.getSelector();
+    const selector = await this.getComponentSelector();
     for (let handle of await page.$$(selector)) {
       const component = await this.create(handle);
       if (!satisfying || (await satisfying(component))) {
@@ -57,7 +57,7 @@ export class ComponentFactory<T extends Component>
     let uniqueComponent: T | undefined;
     for await (let component of this.selectAll(satisfying)) {
       if (uniqueComponent) {
-        const selector = await this.getSelector();
+        const selector = await this.getComponentSelector();
         throw new Error(
           `Component "${
             this._constructor.name
@@ -79,7 +79,7 @@ export class ComponentFactory<T extends Component>
     return firstComponent;
   }
 
-  protected async getSelector() {
+  protected async getComponentSelector() {
     if (this.scope) {
       return [
         await this.scope.$getSelector(),
