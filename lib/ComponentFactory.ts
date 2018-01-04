@@ -57,8 +57,12 @@ export class ComponentFactory<T extends Component>
     let uniqueComponent: T | undefined;
     for await (let component of this.selectAll(satisfying)) {
       if (uniqueComponent) {
-        uniqueComponent = undefined;
-        break;
+        const selector = await this.getSelector();
+        throw new Error(
+          `Component "${
+            this._constructor.name
+          }" is not unique by selector "${selector}"`
+        );
       } else {
         uniqueComponent = component;
       }

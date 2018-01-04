@@ -93,8 +93,30 @@ test("#$_", async t => {
     Post,
     async post => (await post.getTitle()) === "Post 3"
   ))!;
-  const comment = await post.$_(CommentItem);
-  t.is(comment, undefined);
+  const comment = await post.$_(
+    CommentItem,
+    async comment => (await comment.getContent()) === "3#comment 2"
+  );
+  t.is(await comment!.getContent(), "3#comment 2");
+});
+
+test("#$_ with not unique component", async t => {
+  const page = t.context.page;
+  await page.goto(getPageUrl("post"));
+  const post = (await t.context.$(
+    Post,
+    async post => (await post.getTitle()) === "Post 3"
+  ))!;
+  try {
+    await post.$_(CommentItem);
+  } catch (err) {
+    if (err instanceof Error) {
+      t.is(
+        err.message,
+        'Component "CommentItem" is not unique by selector "html > body > div:nth-child(3) li.comment"'
+      );
+    }
+  }
 });
 
 test("#$", async t => {
