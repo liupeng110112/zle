@@ -101,7 +101,7 @@ export class ComponentFactory<T> {
     }
   }
 
-  protected async getComponentSelector() {
+  async getComponentSelector() {
     if (this.scope) {
       return [
         await this.scope.$getSelector(),
