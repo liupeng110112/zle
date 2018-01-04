@@ -1,5 +1,5 @@
 import { Context } from './Context';
-import { DEFAULT_WAIT_FOR_TIMEOUT } from './constants';
+import { DEFAULT_WAIT_FOR_TIMEOUT } from './index';
 import { PageObjectConstructor } from './PageObjectConstructor';
 
 export class PageObjectFactory<T> {
