@@ -35,7 +35,7 @@ test("#$htmlOf", async t => {
 test("#$type", async t => {
   const page = t.context.page;
   await page.goto(getPageUrl("todo"));
-  const todoApp = await t.context.waitFor(TodoApp, 1000);
+  const todoApp = await t.context.waitFor(TodoApp);
   await todoApp.$type("input field", "todo#$type");
   const inputField = await todoApp.$getElementHandleByName("input field");
   const valueHandle = await inputField.getProperty("value");
@@ -46,7 +46,7 @@ test("#$type", async t => {
 test("#$click", async t => {
   const page = t.context.page;
   await page.goto(getPageUrl("todo"));
-  const todoApp = await t.context.waitFor(TodoApp, 1000);
+  const todoApp = await t.context.waitFor(TodoApp);
   await todoApp.$type("input field", "todo#$type");
   await todoApp.$click("submit button");
   const html = await todoApp.$htmlOf("todo-list");
@@ -56,7 +56,7 @@ test("#$click", async t => {
 test("#$press", async t => {
   const page = t.context.page;
   await page.goto(getPageUrl("todo"));
-  const todoApp = await t.context.waitFor(TodoApp, 1000);
+  const todoApp = await t.context.waitFor(TodoApp);
   await todoApp.$type("input field", "todo#$type");
   await todoApp.$press("input field", "Enter");
   const html = await todoApp.$htmlOf("todo-list");
@@ -66,7 +66,7 @@ test("#$press", async t => {
 test("UIDefinition's satisfying", async t => {
   const page = t.context.page;
   await page.goto(getPageUrl("rect"));
-  await t.context.waitFor(Rect, 2000);
+  await t.context.waitFor(Rect);
   t.pass();
 });
 

@@ -1,6 +1,7 @@
 import { ContextFactory } from '../lib/ContextFactory';
 import { getExecutablePath, getPageUrl } from './helpers';
 import { Post } from './assets/post.components';
+import { SitePage } from './assets/site.components';
 import { test } from '../lib/index';
 import { TodoApp } from './assets/todo.components';
 
@@ -15,11 +16,17 @@ test.afterEach.always(async t => {
   await t.context.browser.close();
 });
 
-test("#waitFor", async t => {
+test("#waitFor with component", async t => {
   const page = t.context.page;
   await page.goto(getPageUrl("post"));
-  const post = await t.context.waitFor(Post, 1000);
+  const post = await t.context.waitFor(Post);
   t.is(await post.$getSelector(), "html > body > div:nth-child(1)");
+});
+
+test("#waitFor with page object", async t => {
+  const url = getPageUrl("site");
+  const page = await t.context.waitFor(SitePage, { url });
+  t.truthy(page instanceof SitePage);
 });
 
 test("#$$", async t => {

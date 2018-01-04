@@ -5,6 +5,7 @@ import { Context } from './Context';
 import { UIDefinition, UINode } from './UIDefinition';
 
 export abstract class Component {
+  static $kind: "Component" = "Component";
   static $definition: UIDefinition;
   protected page = this.$context.page;
 
