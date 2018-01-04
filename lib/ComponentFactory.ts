@@ -13,15 +13,15 @@ export class ComponentFactory<T> {
     protected scope?: Component
   ) {}
 
-  create(handle: ElementHandle) {
-    return new this._constructor(this.context, handle);
+  create(elementHandle: ElementHandle) {
+    return new this._constructor(this.context, elementHandle);
   }
 
   async *selectAll(satisfying?: SelectSatisfying<T>) {
     const page = this.context.page;
     const selector = await this.getComponentSelector();
-    for (let handle of await page.$$(selector)) {
-      const component = await this.create(handle);
+    for (let elementHandle of await page.$$(selector)) {
+      const component = await this.create(elementHandle);
       if (!satisfying || (await satisfying(component))) {
         yield component;
       } else {
@@ -79,8 +79,8 @@ export class ComponentFactory<T> {
             return new Promise<void>(async (resolve, reject) => {
               setTimeout(() => reject(`Time exceed: ${timeout}ms`), timeout!);
               await page.waitForSelector(nodeSelector);
-              const handle = await page.$(nodeSelector);
-              await page.evaluate(node.satisfying!, handle);
+              const elementHandle = await page.$(nodeSelector);
+              await page.evaluate(node.satisfying!, elementHandle);
               resolve();
             });
           } else {
@@ -88,9 +88,9 @@ export class ComponentFactory<T> {
           }
         })
     );
-    const handle = await page.$(selector);
-    if (handle) {
-      const component = await this.create(handle);
+    const elementHandle = await page.$(selector);
+    if (elementHandle) {
+      const component = await this.create(elementHandle);
       return component;
     } else {
       throw new Error(
