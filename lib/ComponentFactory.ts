@@ -3,12 +3,10 @@ import { ComponentConstructor } from './ComponentConstructor';
 import { Context } from './Context';
 import { DEFAULT_WAIT_FOR_TIMEOUT } from './constants';
 import { ElementHandle } from 'puppeteer';
-import { IDisplayObjectFactory } from './IDisplayObjectFactory';
 
 export type SelectSatisfying<T> = (component: T) => Promise<boolean>;
 
-export class ComponentFactory<T extends Component>
-  implements IDisplayObjectFactory<T> {
+export class ComponentFactory<T extends Component> {
   constructor(
     protected context: Context,
     protected _constructor: ComponentConstructor<T>,
