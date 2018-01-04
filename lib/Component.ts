@@ -59,6 +59,7 @@ export abstract class Component {
   async $textOf(name: string) {
     const handle = await this.$getElementHandleByName(name);
     const result: string = await this.page.evaluate(
+      /* istanbul ignore next */
       (el: HTMLElement) => el.textContent,
       handle
     );
@@ -67,6 +68,7 @@ export abstract class Component {
 
   async $htmlOf(name: string) {
     const handle = await this.$getElementHandleByName(name);
+    /* istanbul ignore next */
     const result: string = await this.page.evaluate(
       (el: HTMLElement) => el.innerHTML,
       handle
@@ -100,6 +102,7 @@ export abstract class Component {
   async $getSelector() {
     const page = this.$context.page;
     const selector: string | undefined = await page.evaluate(
+      /* istanbul ignore next */
       (el: HTMLElement) => {
         const segments = new Array<string>();
         let node = el;

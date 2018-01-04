@@ -75,7 +75,7 @@ export class ComponentFactory<T extends Component>
     return firstComponent;
   }
 
-  async getSelector() {
+  protected async getSelector() {
     if (this.scope) {
       return [
         await this.scope.$getSelector(),
