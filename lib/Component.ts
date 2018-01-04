@@ -7,7 +7,6 @@ import { UIDefinition, UINode } from './UIDefinition';
 export abstract class Component {
   static $kind: "Component" = "Component";
   static $definition: UIDefinition;
-  protected page = this.$context.page;
 
   constructor(public $context: Context, public $elementHandle: ElementHandle) {}
 
@@ -59,7 +58,7 @@ export abstract class Component {
 
   async $textOf(name: string) {
     const handle = await this.$getElementHandleByName(name);
-    const result: string = await this.page.evaluate(
+    const result: string = await this.$context.page.evaluate(
       /* istanbul ignore next */
       (el: HTMLElement) => el.textContent,
       handle
@@ -70,7 +69,7 @@ export abstract class Component {
   async $htmlOf(name: string) {
     const handle = await this.$getElementHandleByName(name);
     /* istanbul ignore next */
-    const result: string = await this.page.evaluate(
+    const result: string = await this.$context.page.evaluate(
       (el: HTMLElement) => el.innerHTML,
       handle
     );
