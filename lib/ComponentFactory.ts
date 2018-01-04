@@ -13,7 +13,7 @@ export class ComponentFactory<T extends Component> {
     protected scope?: Component
   ) {}
 
-  async create(handle: ElementHandle) {
+  create(handle: ElementHandle) {
     return new this._constructor(this.context, handle);
   }
 
