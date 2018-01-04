@@ -2,18 +2,32 @@ import { Browser, Page } from 'puppeteer';
 import { Component } from './Component';
 import { ComponentConstructor } from './ComponentConstructor';
 import { ComponentFactory, SelectSatisfying } from './ComponentFactory';
+import { DisplayObjectConstructor } from './DisplayObjectConstructor';
+import { DisplayObjectFactory } from './DisplayObjectFactory';
+import { PageObjectFactory } from './PageObjectFactory';
+
+export type WaitForOptions = {
+  timeout?: number;
+  url?: string;
+};
 
 export class Context {
   container: any = {};
 
   constructor(public browser: Browser, public page: Page) {}
 
-  waitFor<T extends Component>(
-    constructor: ComponentConstructor<T>,
-    timeout?: number
+  waitFor<T>(
+    constructor: DisplayObjectConstructor<T>,
+    options?: WaitForOptions
   ): Promise<T> {
-    const factory = new ComponentFactory<T>(this, constructor);
-    return factory.waitFor(timeout);
+    options = options || {};
+    let factory: DisplayObjectFactory<T>;
+    if (constructor.$kind === "Component") {
+      factory = new ComponentFactory(this, constructor);
+    } else {
+      factory = new PageObjectFactory(this, constructor, options.url);
+    }
+    return factory.waitFor(options.timeout);
   }
 
   selectAll = <T extends Component>(

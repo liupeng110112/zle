@@ -6,7 +6,7 @@ import { ElementHandle } from 'puppeteer';
 
 export type SelectSatisfying<T> = (component: T) => Promise<boolean>;
 
-export class ComponentFactory<T extends Component> {
+export class ComponentFactory<T> {
   constructor(
     protected context: Context,
     protected _constructor: ComponentConstructor<T>,
@@ -57,9 +57,7 @@ export class ComponentFactory<T extends Component> {
   }
 
   async waitFor(timeout?: number) {
-    if (!timeout) {
-      timeout = DEFAULT_WAIT_FOR_TIMEOUT;
-    }
+    timeout = timeout || DEFAULT_WAIT_FOR_TIMEOUT;
     const selector = await this.getComponentSelector();
     const page = this.context.page;
     await Promise.all(
