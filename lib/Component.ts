@@ -38,8 +38,8 @@ export abstract class Component {
   }
 
   async $click(name: string, options?: ClickOptions) {
-    const handle = await this.$getElementHandleByName(name);
-    return handle.click(options);
+    const elementHandle = await this.$getElementHandleByName(name);
+    return elementHandle.click(options);
   }
 
   async $press(
@@ -47,33 +47,38 @@ export abstract class Component {
     key: string,
     options?: { text?: string; delay?: number }
   ) {
-    const handle = await this.$getElementHandleByName(name);
-    return handle.press(key, options);
+    const elementHandle = await this.$getElementHandleByName(name);
+    return elementHandle.press(key, options);
   }
 
   async $type(name: string, text: string, options?: { delay: number }) {
-    const handle = await this.$getElementHandleByName(name);
-    return handle.type(text, options);
+    const elementHandle = await this.$getElementHandleByName(name);
+    return elementHandle.type(text, options);
+  }
+
+  async $hover(name: string) {
+    const elementHandle = await this.$getElementHandleByName(name);
+    return elementHandle.hover();
   }
 
   async $textOf(name: string) {
-    const handle = await this.$getElementHandleByName(name);
-    const result: string = await this.$context.page.evaluate(
+    const elementHandle = await this.$getElementHandleByName(name);
+    const text: string = await this.$context.page.evaluate(
       /* istanbul ignore next */
       (el: HTMLElement) => el.textContent,
-      handle
+      elementHandle
     );
-    return result;
+    return text;
   }
 
   async $htmlOf(name: string) {
-    const handle = await this.$getElementHandleByName(name);
+    const elementHandle = await this.$getElementHandleByName(name);
     /* istanbul ignore next */
-    const result: string = await this.$context.page.evaluate(
+    const html: string = await this.$context.page.evaluate(
       (el: HTMLElement) => el.innerHTML,
-      handle
+      elementHandle
     );
-    return result;
+    return html;
   }
 
   async $getElementHandleByName(name: string) {
@@ -85,9 +90,9 @@ export abstract class Component {
       if (node) {
         const page = this.$context.page;
         const selector = node.selector;
-        const handle = await page.$(selector);
-        if (handle) {
-          return handle;
+        const elementHandle = await page.$(selector);
+        if (elementHandle) {
+          return elementHandle;
         } else {
           throw new Error(
             `Cannot locate UINode "${name}" by selector "${selector}"`
