@@ -58,8 +58,12 @@ typings/
 .env
 
 lib/**/*.js
-lib/**/*.map
+lib/**/*.js.map
+lib/**/*.d.ts
+
 test/**/*.js
-test/**/*.map
+test/**/*.js.map
+test/**/*.d.ts
+
 doc/
-dist/
+
