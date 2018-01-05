@@ -1,7 +1,8 @@
 {
-  "name": "neon",
-  "version": "0.4.0",
-  "main": "index.js",
+  "name": "neon-loves-e2e",
+  "version": "0.5.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "repository": "git@github.com:neon-loves-e2e/neon.git",
   "author": "indexmotion <indexmotion@gmail.com>",
   "license": "MIT",
@@ -28,6 +29,9 @@
     "test:cov":
       "./node_modules/.bin/nyc --reporter=text --reporter=html yarn test",
     "build": "yarn test && yarn run tsc:build",
+    "release":
+      "yarn build && yarn publish --registry http://registry.npmjs.org",
     "mkdoc": "./node_modules/.bin/typedoc --out doc lib/"
-  }
+  },
+  "files": ["dist/*"]
 }
