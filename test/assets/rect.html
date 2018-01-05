@@ -7,20 +7,32 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
   <style>
-    div {
+    div.init-transition {
       width: 100px;
       height: 100px;
       background: blue;
       transition: width 0.5s;
     }
+
+    div.hover-transition {
+      width: 100px;
+      height: 100px;
+      background: blue;
+      transition: width 0.5s;
+    }
+
+    div.hover-transition:hover {
+      width: 200px;
+    }
   </style>
 </head>
 
 <body>
-  <div class="rect"></div>
+  <div class="init-transition"></div>
+  <div class="hover-transition"></div>
   <script>
     window.onload = () => {
-      const rect = document.querySelector('div.rect');
+      const rect = document.querySelector('div.init-transition');
       rect.style.width = '200px';
     };
   </script>

@@ -1,7 +1,7 @@
 import { CommentItem, Post } from './assets/post.components';
 import { ContextFactory } from '../lib/ContextFactory';
 import { getExecutablePath, getPageUrl } from './helpers';
-import { Rect } from './assets/rect.components';
+import { HoverTransitionRect, InitTransitionRect } from './assets/rect.components';
 import { test } from '../lib/index';
 import { TodoApp } from './assets/todo.components';
 
@@ -63,10 +63,26 @@ test("#$press", async t => {
   t.not(html.indexOf("todo#$type"), -1);
 });
 
+test("#$hover", async t => {
+  const page = t.context.page;
+  await page.goto(getPageUrl("rect"));
+  const rect = await t.context.waitFor(HoverTransitionRect);
+  const done = t.context.page.evaluate((el: HTMLElement) => {
+    return new Promise((resolve, _) => {
+      el.addEventListener("transitionend", () => {
+        resolve();
+      });
+    });
+  }, rect.$elementHandle);
+  await rect.$hover("rect");
+  await done;
+  t.pass();
+});
+
 test("UIDefinition's satisfying", async t => {
   const page = t.context.page;
   await page.goto(getPageUrl("rect"));
-  await t.context.waitFor(Rect);
+  await t.context.waitFor(InitTransitionRect);
   t.pass();
 });
 
