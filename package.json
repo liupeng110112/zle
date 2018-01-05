@@ -1,6 +1,6 @@
 {
   "name": "neon-loves-e2e",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "repository": "git@github.com:neon-loves-e2e/neon.git",
@@ -26,10 +26,5 @@
     "test:cov": "./node_modules/.bin/nyc --reporter=text --reporter=html yarn test",
     "release": "yarn test && yarn publish --registry http://registry.npmjs.org",
     "mkdoc": "./node_modules/.bin/typedoc --out doc lib/"
-  },
-  "files": [
-    "./lib/**/*.js",
-    "./lib/**/*.js.map",
-    "./lib/**/*.d.ts"
-  ]
+  }
 }
