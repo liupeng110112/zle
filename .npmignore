@@ -1,0 +1,7 @@
+tsconfig.json
+lib/**/*.ts
+test/
+doc/
+coverage/
+
+!lib/**/*.d.ts

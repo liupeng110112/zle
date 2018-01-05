@@ -1,6 +1,6 @@
 {
   "name": "neon-loves-e2e",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "repository": "git@github.com:neon-loves-e2e/neon.git",
