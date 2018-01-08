@@ -1,5 +1,5 @@
 import { ContextFactory } from '../lib/ContextFactory';
-import { getExecutablePath, getPageUrl } from './helpers';
+import { getExecutablePath, getPageUrl } from './';
 import { Post } from './assets/post.components';
 import { SitePage } from './assets/site.components';
 import { test } from '../lib/index';

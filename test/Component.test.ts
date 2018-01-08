@@ -1,6 +1,6 @@
 import { CommentItem, Post } from './assets/post.components';
 import { ContextFactory } from '../lib/ContextFactory';
-import { getExecutablePath, getPageUrl } from './helpers';
+import { getExecutablePath, getPageUrl } from './';
 import { HoverTransitionRect, InitTransitionRect } from './assets/rect.components';
 import { test } from '../lib/index';
 import { TodoApp } from './assets/todo.components';
