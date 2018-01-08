@@ -1,6 +1,9 @@
 import * as fs from 'fs';
 import * as http from 'http';
-import { DEFAULT_PUPPETEER_EXECUTABLE_PATH, DEFAULT_TESTING_SERVER_PORT } from './constants';
+
+export const DEFAULT_TESTING_SERVER_PORT = 8081;
+export const DEFAULT_PUPPETEER_EXECUTABLE_PATH =
+  "/Applications/Chromium.app/Contents/MacOS/Chromium";
 
 export function getExecutablePath() {
   let executablePath = DEFAULT_PUPPETEER_EXECUTABLE_PATH;
