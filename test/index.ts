@@ -1,5 +1,5 @@
-import * as fs from 'fs';
-import * as http from 'http';
+import * as fs from "fs";
+import * as http from "http";
 
 export const DEFAULT_TESTING_SERVER_PORT = 8081;
 export const DEFAULT_PUPPETEER_EXECUTABLE_PATH =

@@ -1,10 +1,10 @@
-import { Browser, Page } from 'puppeteer';
-import { Component } from './Component';
-import { ComponentConstructor } from './ComponentConstructor';
-import { ComponentFactory, SelectSatisfying } from './ComponentFactory';
-import { DisplayObjectConstructor } from './DisplayObjectConstructor';
-import { DisplayObjectFactory } from './DisplayObjectFactory';
-import { PageObjectFactory } from './PageObjectFactory';
+import { Browser, Page } from "puppeteer";
+import { Component } from "./Component";
+import { ComponentConstructor } from "./ComponentConstructor";
+import { ComponentFactory, SelectSatisfying } from "./ComponentFactory";
+import { DisplayObjectConstructor } from "./DisplayObjectConstructor";
+import { DisplayObjectFactory } from "./DisplayObjectFactory";
+import { PageObjectFactory } from "./PageObjectFactory";
 
 export class Context {
   container: any = {};

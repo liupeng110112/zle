@@ -2,5 +2,6 @@
     "editor.tabSize": 2,
     "editor.formatOnSave": true,
     "typescript.extension.sortImports.sortOnSave": true,
+    "typescript.extension.sortImports.quoteStyle": "double",
     "typescript.tsdk": "node_modules/typescript/lib"
 }

@@ -1,5 +1,5 @@
-import { ComponentConstructor } from './ComponentConstructor';
-import { Context } from './Context';
+import { ComponentConstructor } from "./ComponentConstructor";
+import { Context } from "./Context";
 
 export interface PageObjectConstructor<T> {
   $kind: "PageObject";

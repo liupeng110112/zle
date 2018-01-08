@@ -1,5 +1,5 @@
-import { Context } from './Context';
-import { RegisterContextual, test as ava_test } from 'ava';
+import { Context } from "./Context";
+import { RegisterContextual, test as ava_test } from "ava";
 
 export { Component } from "./Component";
 export { ComponentConstructor } from "./ComponentConstructor";

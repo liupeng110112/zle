@@ -1,5 +1,5 @@
-import { Component } from './Component';
-import { ComponentConstructor } from './ComponentConstructor';
+import { Component } from "./Component";
+import { ComponentConstructor } from "./ComponentConstructor";
 
 export type UISatisfyingFunction = (el: HTMLElement) => void;
 export type UISatisfying = "visible" | "hidden" | UISatisfyingFunction;

@@ -1,5 +1,5 @@
-import { Context } from './Context';
-import { launch, LaunchOptions } from 'puppeteer';
+import { Context } from "./Context";
+import { launch, LaunchOptions } from "puppeteer";
 
 export class ContextFactory {
   async create(options?: LaunchOptions) {

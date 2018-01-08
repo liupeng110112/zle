@@ -1,5 +1,5 @@
-import { ComponentConstructor } from './ComponentConstructor';
-import { Context } from './Context';
+import { ComponentConstructor } from "./ComponentConstructor";
+import { Context } from "./Context";
 
 export abstract class PageObject {
   static $kind: "PageObject" = "PageObject";
