@@ -1,6 +1,6 @@
-import { Component } from '../../lib/Component';
-import { PageObject } from '../../lib/PageObject';
-import { UIDefinition } from '../../lib/UIDefinition';
+import { Component } from "../../lib/Component";
+import { PageObject } from "../../lib/PageObject";
+import { UIDefinition } from "../../lib/UIDefinition";
 
 export class Header extends Component {
   static $definition = UIDefinition.root("header");

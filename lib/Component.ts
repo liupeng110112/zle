@@ -1,8 +1,8 @@
-import { ClickOptions, ElementHandle } from 'puppeteer';
-import { ComponentConstructor } from './ComponentConstructor';
-import { ComponentFactory, SelectSatisfying } from './ComponentFactory';
-import { Context } from './Context';
-import { UIDefinition, UINode } from './UIDefinition';
+import { ClickOptions, ElementHandle } from "puppeteer";
+import { ComponentConstructor } from "./ComponentConstructor";
+import { ComponentFactory, SelectSatisfying } from "./ComponentFactory";
+import { Context } from "./Context";
+import { UIDefinition, UINode } from "./UIDefinition";
 
 export abstract class Component {
   static $kind: "Component" = "Component";

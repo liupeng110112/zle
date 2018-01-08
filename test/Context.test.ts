@@ -1,9 +1,9 @@
-import { ContextFactory } from '../lib/ContextFactory';
-import { getExecutablePath, getPageUrl } from './';
-import { Post } from './assets/post.components';
-import { SitePage } from './assets/site.components';
-import { test } from '../lib/index';
-import { TodoApp } from './assets/todo.components';
+import { ContextFactory } from "../lib/ContextFactory";
+import { getExecutablePath, getPageUrl } from "./";
+import { Post } from "./assets/post.components";
+import { SitePage } from "./assets/site.components";
+import { test } from "../lib/index";
+import { TodoApp } from "./assets/todo.components";
 
 test.beforeEach(async t => {
   const factory = new ContextFactory();
