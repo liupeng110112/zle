@@ -24,14 +24,7 @@ class Post {
   }
 
   assertCommentExists(text: string) {
-    let flag = false;
-    for (let comment of this.comments) {
-      if (comment === text) {
-        flag = true;
-        break;
-      }
-    }
-    assert.ok(flag);
+    assert.notEqual(this.comments.indexOf(text), -1);
     return this;
   }
 }
