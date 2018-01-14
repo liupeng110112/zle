@@ -1,12 +1,17 @@
-type Instruction = [string, any[]]; // [name, args]
-type Chainable<T> = PromiseLike<T> & T;
+export type Chainable<T> = PromiseLike<T> & T;
 
 export function chain<T extends object>(entrypoint: () => Promise<T>) {
-  const instructions = new Array<Instruction>();
-  const thenHandler = async (
-    onfulfilled?: (value: any) => any,
-    onrejected?: (value: any) => any
-  ) => {
+  const instructions = new Array<[string, any[]]>();
+  const thenHandler = async <TResult1 = T, TResult2 = never>(
+    onfulfilled?:
+      | ((value: T) => TResult1 | PromiseLike<TResult1>)
+      | undefined
+      | null,
+    onrejected?:
+      | ((reason: any) => TResult2 | PromiseLike<TResult2>)
+      | undefined
+      | null
+  ): Promise<TResult1 | TResult2> => {
     if (instructions.length) {
       try {
         let intermediate: any = await entrypoint();
