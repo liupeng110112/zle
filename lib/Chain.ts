@@ -1,5 +1,5 @@
 type Instruction = [string, any[]]; // [name, args]
-type Chainable<T> = Promise<T> & T;
+type Chainable<T> = PromiseLike<T> & T;
 
 export function chain<T extends object>(entrypoint: () => Promise<T>) {
   const instructions = new Array<Instruction>();
@@ -9,11 +9,11 @@ export function chain<T extends object>(entrypoint: () => Promise<T>) {
   ) => {
     if (instructions.length) {
       try {
-        let object: any = await entrypoint();
+        let intermediate: any = await entrypoint();
         for (let [name, args] of instructions) {
-          object = await object[name](...args);
+          intermediate = await intermediate[name](...args);
         }
-        return Promise.resolve(object).then(onfulfilled, onrejected);
+        return Promise.resolve(intermediate).then(onfulfilled, onrejected);
       } catch (err) {
         return Promise.reject(err).then(onfulfilled, onrejected);
       }
@@ -21,25 +21,16 @@ export function chain<T extends object>(entrypoint: () => Promise<T>) {
       return entrypoint().then(onfulfilled, onrejected);
     }
   };
-  const catchHandler = (onrejected?: (value: any) => any) => {
-    return thenHandler(undefined, onrejected);
-  };
   const proxy = new Proxy(
     {},
     {
       get: (_, name: string) => {
         return (...args: any[]) => {
-          switch (name) {
-            case "then": {
-              return thenHandler(...args);
-            }
-            case "catch": {
-              return catchHandler(...args);
-            }
-            default: {
-              instructions.push([name, args]);
-              return proxy;
-            }
+          if (name === "then") {
+            return thenHandler(...args);
+          } else {
+            instructions.push([name, args]);
+            return proxy;
           }
         };
       }
