@@ -12,6 +12,7 @@ export { PageObject } from "./PageObject";
 export { PageObjectConstructor } from "./PageObjectConstructor";
 export { PageObjectFactory } from "./PageObjectFactory";
 export { UIDefinition } from "./UIDefinition";
+export { chain } from "./Chain";
 
 export const DEFAULT_WAIT_FOR_TIMEOUT = 30000;
 export const test: RegisterContextual<Context> = ava_test;
