@@ -1,5 +1,6 @@
 import { CommentItem, Post } from "./assets/post.components";
 import { ContextFactory } from "../lib/ContextFactory";
+import { Gate, Zoo } from "./assets/zoo.components";
 import { getExecutablePath, getPageUrl } from "./";
 import { HoverTransitionRect, InitTransitionRect } from "./assets/rect.components";
 import { test } from "../lib/index";
@@ -144,4 +145,32 @@ test("#$", async t => {
   ))!;
   const comment = await post.$(CommentItem);
   t.is(await comment!.getContent(), "3#comment 1");
+});
+
+test("#$inspect", async t => {
+  t.plan(5);
+  const page = t.context.page;
+  await page.goto(getPageUrl("zoo"));
+  const zoo = await t.context.waitFor(Zoo);
+  const end = await zoo
+    .gotoGate()
+    .gotoTigerHouse()
+    .$inspect(async self => {
+      t.is(await self.has(), "Tiger");
+    })
+    .gotoMonkeyHouse()
+    .$inspect(async self => {
+      t.is(await self.has(), "Monkey");
+    })
+    .gotoPandaHouse()
+    .$inspect(async self => {
+      t.is(await self.has(), "Panda");
+    })
+    .gotoGiraffeHouse()
+    .$inspect(async self => {
+      t.is(await self.has(), "Giraffe");
+    })
+    .gotoGate()
+    .$done();
+  t.truthy(end instanceof Gate);
 });
