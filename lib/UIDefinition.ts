@@ -24,7 +24,7 @@ export class UIDefinition {
     return new UIDefinition(selector, name, satisfying);
   }
 
-  findUINodeByName(name: string) {
+  findUINode(name: string) {
     for (let node of this.walkUINodes()) {
       if (node.name === name) {
         return node;
