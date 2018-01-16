@@ -18,7 +18,7 @@ export abstract class Component {
     });
   }
 
-  async $findUINodeByName(name: string) {
+  async $findUINode(name: string) {
     for await (let node of this.$walkUINodes()) {
       if (node.name === name) {
         return node;
@@ -94,7 +94,7 @@ export abstract class Component {
     if (name === constructor.$definition.name) {
       return this.$elementHandle;
     } else {
-      const node = await this.$findUINodeByName(name);
+      const node = await this.$findUINode(name);
       if (node) {
         const page = this.$context.page;
         const selector = node.selector;

@@ -5,23 +5,23 @@ import { UINode } from "../lib/UIDefinition";
 test("UIDefinition", t => {
   const definition = Post.$definition;
 
-  const post = definition.findUINodeByName("post")!;
+  const post = definition.findUINode("post")!;
   t.deepEqual(post.selector, "");
   t.is(post.name, "post");
   t.truthy(post.hasDescendants);
 
-  const header = definition.findUINodeByName("post header")!;
+  const header = definition.findUINode("post header")!;
   t.deepEqual(header.selector, "header");
   t.is(header.name, "post header");
   t.truthy(header.hasDescendants);
-  t.falsy(definition.findUINodeByName("general header"));
+  t.falsy(definition.findUINode("general header"));
 
-  const footer = definition.findUINodeByName("post footer")!;
+  const footer = definition.findUINode("post footer")!;
   t.deepEqual(footer.selector, "footer");
   t.is(footer.name, "post footer");
   t.truthy(footer.hasDescendants);
 
-  const commentList = definition.findUINodeByName("comments")!;
+  const commentList = definition.findUINode("comments")!;
   t.deepEqual(commentList.selector, "footer div.comments ul");
   t.is(commentList.name, "comments");
   t.truthy(commentList.hasDescendants);
