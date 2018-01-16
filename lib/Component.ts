@@ -1,3 +1,4 @@
+import { chain } from "./Chain";
 import { ClickOptions, ElementHandle } from "puppeteer";
 import { ComponentConstructor } from "./ComponentConstructor";
 import { ComponentFactory, SelectSatisfying } from "./ComponentFactory";
@@ -9,6 +10,13 @@ export abstract class Component {
   static $definition: UIDefinition;
 
   constructor(public $context: Context, public $elementHandle: ElementHandle) {}
+
+  $inspect(callback: (self: this) => Promise<void>) {
+    return chain(async () => {
+      await callback(this);
+      return this;
+    });
+  }
 
   async $findUINodeByName(name: string) {
     for await (let node of this.$walkUINodes()) {

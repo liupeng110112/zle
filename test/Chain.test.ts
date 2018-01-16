@@ -59,6 +59,7 @@ test("chain", async t => {
     .assertPageNumber(5)
     .openComposer()
     .compose("say something other here")
-    .assertCommentExists("say something other here");
+    .assertCommentExists("say something other here")
+    .$done();
   t.pass();
 });
