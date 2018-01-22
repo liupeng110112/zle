@@ -7,16 +7,16 @@ export const DEFAULT_PUPPETEER_EXECUTABLE_PATH =
 
 export function getExecutablePath() {
   let executablePath = DEFAULT_PUPPETEER_EXECUTABLE_PATH;
-  if (process.env.NEON_PUPPETEER_EXECUTABLE_PATH) {
-    executablePath = process.env.NEON_PUPPETEER_EXECUTABLE_PATH!;
+  if (process.env.ZLE_PUPPETEER_EXECUTABLE_PATH) {
+    executablePath = process.env.ZLE_PUPPETEER_EXECUTABLE_PATH!;
   }
   return executablePath;
 }
 
 export function getPort() {
   let port = DEFAULT_TESTING_SERVER_PORT;
-  if (process.env.NEON_TESTING_SERVER_PORT) {
-    port = parseInt(process.env.NEON_TESTING_SERVER_PORT!);
+  if (process.env.ZLE_TESTING_SERVER_PORT) {
+    port = parseInt(process.env.ZLE_TESTING_SERVER_PORT!);
   }
   return port;
 }
