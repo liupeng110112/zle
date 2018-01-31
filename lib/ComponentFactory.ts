@@ -44,7 +44,7 @@ export class ComponentFactory<T> {
         uniqueComponent = component;
       }
     }
-    return uniqueComponent;
+    return uniqueComponent as T;
   }
 
   async selectFirst(satisfying?: SelectSatisfying<T>) {
