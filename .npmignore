@@ -3,5 +3,8 @@ lib/**/*.ts
 test/
 doc/
 coverage/
+.nyc_output/
+.vscode/
 
 !lib/**/*.d.ts
+
