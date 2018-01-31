@@ -56,8 +56,7 @@ export class ComponentFactory<T> {
     return firstComponent;
   }
 
-  async waitFor(timeout?: number) {
-    timeout = timeout || DEFAULT_WAIT_FOR_TIMEOUT;
+  async waitFor(timeout = DEFAULT_WAIT_FOR_TIMEOUT) {
     const selector = await this.getComponentSelector();
     const page = this.context.page;
     await Promise.all(

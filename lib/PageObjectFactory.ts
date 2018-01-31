@@ -12,8 +12,7 @@ export class PageObjectFactory<T> {
     return new this._constructor(this.context);
   }
 
-  async waitFor(timeout?: number) {
-    timeout = timeout || DEFAULT_WAIT_FOR_TIMEOUT;
+  async waitFor(timeout = DEFAULT_WAIT_FOR_TIMEOUT) {
     const page = this.context.page;
     if (this._constructor.$url) {
       await page.goto(this._constructor.$url, { timeout });
