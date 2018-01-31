@@ -174,3 +174,13 @@ test("#$inspect", async t => {
     .$done();
   t.truthy(end instanceof Gate);
 });
+
+test("#$waitFor", async t => {
+  const page = t.context.page;
+  await page.goto(getPageUrl("post"));
+  const post = await t.context.selectFirst(Post, async post => {
+    return (await post.getTitle()) == "Post 2";
+  });
+  const commentItem = await post!.$waitFor(CommentItem);
+  t.is(await commentItem.getContent(), "2#comment 1");
+});

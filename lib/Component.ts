@@ -139,6 +139,14 @@ export abstract class Component {
   };
   $ = this.$selectFirst;
 
+  $waitFor<T extends Component>(
+    constructor: ComponentConstructor<T>,
+    timeout?: number
+  ) {
+    const factory = new ComponentFactory(this.$context, constructor, this);
+    return factory.waitFor(timeout);
+  }
+
   async $getSelector() {
     const page = this.$context.page;
     const selector: string | undefined = await page.evaluate(
