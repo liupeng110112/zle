@@ -13,9 +13,9 @@
   },
   "dependencies": {
     "@types/lodash": "^4.14.104",
-    "@types/puppeteer": "^0.13.8",
+    "@types/puppeteer": "^1.0.0",
     "ava": "^0.24.0",
-    "puppeteer": "^0.13.0"
+    "puppeteer": "1.0.0"
   },
   "scripts": {
     "tsc": "./node_modules/.bin/tsc",
