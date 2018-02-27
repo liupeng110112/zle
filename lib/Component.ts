@@ -1,9 +1,9 @@
 import { chain } from "./Chain";
+import { Chainable } from "./Chain";
 import { ClickOptions, ElementHandle } from "puppeteer";
 import { ComponentConstructor } from "./ComponentConstructor";
 import { ComponentFactory, SelectSatisfying } from "./ComponentFactory";
 import { Context } from "./Context";
-import { Chainable } from "./Chain";
 import { UIDefinition, UINode } from "./UIDefinition";
 
 export abstract class Component {
@@ -181,7 +181,9 @@ export abstract class Component {
     if (selector) {
       return selector;
     } else {
-      throw new Error(`Component ${this} is break away from DOM`);
+      throw new Error(
+        `Component ${this.constructor.name} is break away from DOM`
+      );
     }
   }
 }
