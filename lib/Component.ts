@@ -3,6 +3,7 @@ import { ClickOptions, ElementHandle } from "puppeteer";
 import { ComponentConstructor } from "./ComponentConstructor";
 import { ComponentFactory, SelectSatisfying } from "./ComponentFactory";
 import { Context } from "./Context";
+import { Chainable } from "./Chain";
 import { UIDefinition, UINode } from "./UIDefinition";
 
 export abstract class Component {
@@ -11,7 +12,7 @@ export abstract class Component {
 
   constructor(public $context: Context, public $elementHandle: ElementHandle) {}
 
-  $inspect(callback: (self: this) => Promise<void>) {
+  $inspect(callback: (self: this) => Promise<void>): Chainable<this> {
     return chain(async () => {
       await callback(this);
       return this;
