@@ -1,4 +1,4 @@
-import { chain } from "../../lib/Chain";
+import { chain, Chainable } from "../../lib/Chain";
 import { Component } from "../../lib/Component";
 import { UIDefinition } from "../../lib/UIDefinition";
 
@@ -9,7 +9,7 @@ export interface IAnimalHouse {
 export class Gate extends Component {
   static $definition = UIDefinition.root("div.gate");
 
-  gotoTigerHouse() {
+  gotoTigerHouse(): Chainable<TigerHouse> {
     return chain(() => {
       return this.$context.waitFor(TigerHouse);
     });

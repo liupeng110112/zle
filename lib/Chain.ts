@@ -1,4 +1,4 @@
-export type Chainable<T> = T & { $done(): Promise<T> };
+export type Chainable<T> = { [P in keyof T]: T[P] } & { $done(): Promise<T> };
 
 export function chain<T>(entrypoint: () => Promise<T>) {
   const steps = new Array<[string, any[]]>();

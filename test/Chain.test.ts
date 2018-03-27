@@ -19,12 +19,16 @@ class Post {
 
   assertPageNumber(pageNumber: number) {
     assert.equal(this.pageNumber, pageNumber);
-    return this;
+    return chain(() => {
+      return Promise.resolve(this);
+    });
   }
 
   assertCommentExists(text: string) {
     assert.notEqual(this.comments.indexOf(text), -1);
-    return this;
+    return chain(() => {
+      return Promise.resolve(this);
+    });
   }
 }
 
