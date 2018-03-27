@@ -5,23 +5,23 @@ import { Post } from "./assets/post.components";
 import { SitePage } from "./assets/site.components";
 import { TodoApp } from "./assets/todo.components";
 
-describe("Context", () => {
+suite("Context", () => {
   initialize();
 
-  it("#waitFor with component", async () => {
+  test("#waitFor with component", async () => {
     const page = context.page;
     await page.goto(getPageUrl("post"));
     const post = await context.waitFor(Post);
     assert.equal(await post.$getSelector(), "html > body > div:nth-child(1)");
   });
 
-  it("#waitFor with page object", async () => {
+  test("#waitFor with page object", async () => {
     await context.page.goto(getPageUrl("site"));
     const page = await context.waitFor(SitePage);
     assert.ok(page instanceof SitePage);
   });
 
-  it("#$$", async () => {
+  test("#$$", async () => {
     const page = context.page;
     await page.goto(getPageUrl("post"));
     const posts = [];
@@ -33,7 +33,7 @@ describe("Context", () => {
     assert.equal(posts.length, 5);
   });
 
-  it("#$$ with satisfying function", async () => {
+  test("#$$ with satisfying function", async () => {
     const page = context.page;
     await page.goto(getPageUrl("post"));
     const posts = [];
@@ -47,7 +47,7 @@ describe("Context", () => {
     assert.equal(await posts[0].getTitle(), "Post 3");
   });
 
-  it("#$_ with not unique component", async () => {
+  test("#$_ with not unique component", async () => {
     const page = context.page;
     await page.goto(getPageUrl("post"));
     try {
@@ -62,14 +62,14 @@ describe("Context", () => {
     }
   });
 
-  it("#$_ with unique component", async () => {
+  test("#$_ with unique component", async () => {
     const page = context.page;
     await page.goto(getPageUrl("todo"));
     const todoApp = await context.$_(TodoApp);
     assert.ok(todoApp instanceof TodoApp);
   });
 
-  it("#$_ with satisfying function", async () => {
+  test("#$_ with satisfying function", async () => {
     const page = context.page;
     await page.goto(getPageUrl("post"));
     const post = await context.$_(
@@ -80,20 +80,20 @@ describe("Context", () => {
     assert.equal(await post!.getTitle(), "Post 3");
   });
 
-  it("#$", async () => {
+  test("#$", async () => {
     const page = context.page;
     await page.goto(getPageUrl("post"));
     const post = await context.$(Post);
     assert.equal(await post!.getTitle(), "Post 1");
   });
 
-  it("#$ with not existed component", async () => {
+  test("#$ with not existed component", async () => {
     const page = context.page;
     await page.goto(getPageUrl("post"));
     assert.equal(await context.$(TodoApp), undefined);
   });
 
-  it("#$ with satisfying component", async () => {
+  test("#$ with satisfying component", async () => {
     const page = context.page;
     await page.goto(getPageUrl("post"));
     const post = await context.$(

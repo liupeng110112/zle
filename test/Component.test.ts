@@ -6,10 +6,10 @@ import { getPageUrl } from "./TestServer";
 import { HoverTransitionRect, InitTransitionRect } from "./assets/rect.components";
 import { TodoApp } from "./assets/todo.components";
 
-describe("Component", () => {
+suite("Component", () => {
   initialize();
 
-  it("#$textOf", async () => {
+  test("#$textOf", async () => {
     const page = context.page;
     await page.goto(getPageUrl("post"));
     const post = await context.waitFor(Post);
@@ -17,7 +17,7 @@ describe("Component", () => {
     assert.equal(title, "Post 1");
   });
 
-  it("#$htmlOf", async () => {
+  test("#$htmlOf", async () => {
     const page = context.page;
     await page.goto(getPageUrl("post"));
     const post = await context.waitFor(Post);
@@ -25,7 +25,7 @@ describe("Component", () => {
     assert.equal(html.trim(), "<h2>Post 1</h2>");
   });
 
-  it("#$type", async () => {
+  test("#$type", async () => {
     const page = context.page;
     await page.goto(getPageUrl("todo"));
     const todoApp = await context.waitFor(TodoApp);
@@ -36,7 +36,7 @@ describe("Component", () => {
     assert.equal(value, "todo#$type");
   });
 
-  it("#$click", async () => {
+  test("#$click", async () => {
     const page = context.page;
     await page.goto(getPageUrl("todo"));
     const todoApp = await context.waitFor(TodoApp);
@@ -46,7 +46,7 @@ describe("Component", () => {
     assert.notEqual(html.indexOf("todo#$type"), -1);
   });
 
-  it("#$press", async () => {
+  test("#$press", async () => {
     const page = context.page;
     await page.goto(getPageUrl("todo"));
     const todoApp = await context.waitFor(TodoApp);
@@ -56,7 +56,7 @@ describe("Component", () => {
     assert.notEqual(html.indexOf("todo#$type"), -1);
   });
 
-  it("#$hover", async () => {
+  test("#$hover", async () => {
     const page = context.page;
     await page.goto(getPageUrl("rect"));
     const rect = await context.waitFor(HoverTransitionRect);
@@ -71,13 +71,13 @@ describe("Component", () => {
     await done;
   });
 
-  it("UIDefinition's satisfying", async () => {
+  test("UIDefinition's satisfying", async () => {
     const page = context.page;
     await page.goto(getPageUrl("rect"));
     await context.waitFor(InitTransitionRect);
   });
 
-  it("#$$", async () => {
+  test("#$$", async () => {
     const page = context.page;
     await page.goto(getPageUrl("post"));
     const post = await context.$(
@@ -93,7 +93,7 @@ describe("Component", () => {
     assert.equal(comments.length, 3);
   });
 
-  it("#$_", async () => {
+  test("#$_", async () => {
     const page = context.page;
     await page.goto(getPageUrl("post"));
     const post = (await context.$(
@@ -107,7 +107,7 @@ describe("Component", () => {
     assert.equal(await comment!.getContent(), "3#comment 2");
   });
 
-  it("#$_ with not unique component", async () => {
+  test("#$_ with not unique component", async () => {
     const page = context.page;
     await page.goto(getPageUrl("post"));
     const post = (await context.$(
@@ -126,7 +126,7 @@ describe("Component", () => {
     }
   });
 
-  it("#$", async () => {
+  test("#$", async () => {
     const page = context.page;
     await page.goto(getPageUrl("post"));
     const post = (await context.$(
@@ -137,7 +137,7 @@ describe("Component", () => {
     assert.equal(await comment!.getContent(), "3#comment 1");
   });
 
-  it("#$inspect", async () => {
+  test("#$inspect", async () => {
     const page = context.page;
     await page.goto(getPageUrl("zoo"));
     const zoo = await context.waitFor(Zoo);
@@ -164,7 +164,7 @@ describe("Component", () => {
     assert.ok(end instanceof Gate);
   });
 
-  it("#$waitFor", async () => {
+  test("#$waitFor", async () => {
     const page = context.page;
     await page.goto(getPageUrl("post"));
     const post = await context.selectFirst(Post, async post => {

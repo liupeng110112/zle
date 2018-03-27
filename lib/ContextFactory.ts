@@ -43,23 +43,23 @@ export function initialize(options: LaunchOptions = {}) {
       undefined;
   }
 
-  before(async function() {
+  suiteSetup(async function() {
     this.browser = await launch(options);
   });
 
-  after(async function() {
+  suiteTeardown(async function() {
     if (this.browser) {
       await this.browser.close();
     }
   });
 
-  beforeEach(async function() {
+  setup(async function() {
     const factory = new ContextFactory(this.browser);
     const context = await factory.create();
     _context = context;
   });
 
-  afterEach(async function() {
+  teardown(async function() {
     if (_context) {
       await _context.page.close();
       _context = undefined;

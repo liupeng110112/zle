@@ -51,19 +51,17 @@ class CommentComposer {
   }
 }
 
-describe("Chainable", () => {
-  it("supports method chaining", async () => {
-    const post = new Post(1);
-    await post
-      .openComposer()
-      .compose("say something here")
-      .assertCommentExists("say something here")
-      .openPageNavigator()
-      .goto(5)
-      .assertPageNumber(5)
-      .openComposer()
-      .compose("say something other here")
-      .assertCommentExists("say something other here")
-      .$done();
-  });
+test("Chainable supports method chaining", async () => {
+  const post = new Post(1);
+  await post
+    .openComposer()
+    .compose("say something here")
+    .assertCommentExists("say something here")
+    .openPageNavigator()
+    .goto(5)
+    .assertPageNumber(5)
+    .openComposer()
+    .compose("say something other here")
+    .assertCommentExists("say something other here")
+    .$done();
 });

@@ -23,7 +23,7 @@
     "tsc": "./node_modules/.bin/tsc -p tsconfig.prod.json",
     "tsc:auto": "yarn run tsc --watch",
     "test":
-      "./node_modules/.bin/mocha -r ts-node/register --reporter mochawesome test/*.test.ts $ZLE_TEST_OPTIONS || true",
+      "./node_modules/.bin/mocha --ui tdd -r ts-node/register --reporter mochawesome test/*.test.ts $ZLE_TEST_OPTIONS || true",
     "pretest": "./node_modules/.bin/ts-node ./test/TestServer start &",
     "posttest": "./node_modules/.bin/ts-node ./test/TestServer stop",
     "test:cov":
