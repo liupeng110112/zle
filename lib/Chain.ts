@@ -1,6 +1,4 @@
-export type Chainable<T> = {
-  $done(): Promise<T>;
-} & T;
+export type Chainable<T> = T & { $done(): Promise<T> };
 
 export function chain<T>(entrypoint: () => Promise<T>) {
   const steps = new Array<[string, any[]]>();
@@ -10,7 +8,7 @@ export function chain<T>(entrypoint: () => Promise<T>) {
     );
     process.exit(1);
   }, process.env.ZLE_CHAINABLE_TIMEOUT || 10000);
-  const proxy = new Proxy<Chainable<T>>({} as any, {
+  const chainable = new Proxy<Chainable<T>>({} as any, {
     get: (_, name: string) => {
       return (...args: any[]) => {
         if (name === "$done") {
@@ -31,10 +29,10 @@ export function chain<T>(entrypoint: () => Promise<T>) {
           })();
         } else {
           steps.push([name, args]);
-          return proxy;
+          return chainable;
         }
       };
     }
   });
-  return proxy;
+  return chainable;
 }
