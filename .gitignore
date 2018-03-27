@@ -67,3 +67,4 @@ test/**/*.d.ts
 
 doc/
 
+mochawesome-report/
