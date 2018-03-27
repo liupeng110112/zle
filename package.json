@@ -21,7 +21,7 @@
   },
   "scripts": {
     "tsc": "./node_modules/.bin/tsc -p tsconfig.prod.json",
-    "tsc:auto": "yarn run tsc --watch",
+    "tsc:auto": "yarn run tsc --watch --watch-extensions ts",
     "test":
       "./node_modules/.bin/mocha --ui tdd -r ts-node/register --reporter mochawesome test/*.test.ts $ZLE_TEST_OPTIONS || true",
     "pretest": "./node_modules/.bin/ts-node ./test/TestServer start &",
