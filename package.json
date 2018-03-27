@@ -10,7 +10,8 @@
     "@types/mocha": "^5.0.0",
     "mochawesome": "^3.0.2",
     "nyc": "^11.4.1",
-    "typescript": "^2.6.2"
+    "typescript": "^2.6.2",
+    "ts-node": "^5.0.1"
   },
   "dependencies": {
     "@types/lodash": "^4.14.104",
@@ -19,12 +20,12 @@
     "puppeteer": "1.0.0"
   },
   "scripts": {
-    "tsc": "./node_modules/.bin/tsc",
-    "tsc:auto": "yarn tsc --watch",
+    "tsc": "./node_modules/.bin/tsc -p tsconfig.prod.json",
+    "tsc:auto": "yarn run tsc --watch",
     "test":
-      "./node_modules/.bin/mocha --reporter mochawesome test/*.test.js $ZLE_TEST_OPTIONS || true",
-    "pretest": "yarn run tsc && (node ./test/TestServer start &)",
-    "posttest": "node ./test/TestServer stop",
+      "./node_modules/.bin/mocha -r ts-node/register --reporter mochawesome test/*.test.ts $ZLE_TEST_OPTIONS || true",
+    "pretest": "./node_modules/.bin/ts-node ./test/TestServer start &",
+    "posttest": "./node_modules/.bin/ts-node ./test/TestServer stop",
     "test:cov":
       "./node_modules/.bin/nyc --reporter=text --reporter=html yarn test",
     "release": "yarn test && yarn publish --registry http://registry.npmjs.org"
