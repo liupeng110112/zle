@@ -77,13 +77,18 @@ export class ComponentFactory<T> {
           } else if (node.satisfying) {
             return new Promise<ElementHandle>(async (resolve, reject) => {
               const timer = setTimeout(
-                () => reject(`Time exceed: ${timeout}ms`),
+                () =>
+                  reject(
+                    `Component ${
+                      this._constructor.name
+                    } cannot be satisfied: ${timeout}ms`
+                  ),
                 timeout!
               );
               await page.waitForSelector(nodeSelector);
-              clearTimeout(timer);
               const elementHandle = await page.$(nodeSelector);
               await page.evaluate(node.satisfying!, elementHandle);
+              clearTimeout(timer);
               resolve(elementHandle!);
             });
           } else {
@@ -97,9 +102,9 @@ export class ComponentFactory<T> {
       return component;
     } else {
       throw new Error(
-        `Cannot locate component "${
+        `Cannot locate component ${
           this._constructor.name
-        }" by selector "${selector}"`
+        } by selector "${selector}"`
       );
     }
   }
