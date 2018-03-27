@@ -1,8 +1,9 @@
+import { Browser, launch, LaunchOptions } from "puppeteer";
 import { Context } from "./Context";
-import { launch, LaunchOptions } from "puppeteer";
 
 export class ContextFactory {
-  async create(options?: LaunchOptions) {
+  constructor(protected browser: Browser) {}
+  async create() {
     // Polyfill for "for await"
     // Reference: https://github.com/Microsoft/TypeScript/issues/14151
     // Reference: https://stackoverflow.com/questions/43694281/ts2318-cannot-find-global-type-asynciterableiterator-async-generator
@@ -10,12 +11,11 @@ export class ContextFactory {
       Symbol.asyncIterator || Symbol.for("asyncIterator");
     // End of polyfill
 
-    const browser = await launch(options);
-    const page = await browser.newPage();
+    const page = await this.browser.newPage();
     page.on("console", msg => {
       console.log(`>>> [${msg.type}] ${msg.text}`);
     });
-    return new Context(browser, page);
+    return new Context(page);
   }
 }
 
@@ -34,23 +34,34 @@ export const context = new Proxy<Context>({} as any, {
 });
 
 export function initialize(options: LaunchOptions = {}) {
-  beforeEach(async () => {
-    if (!options.executablePath) {
-      options.executablePath =
-        process.env.ZLE_EXECUTABLE_PATH ||
-        (process.platform === "darwin" &&
-          "/Applications/Chromium.app/Contents/MacOS/Chromium") ||
-        (process.platform === "linux" && "/usr/bin/chromium-browser") ||
-        undefined;
+  if (!options.executablePath) {
+    options.executablePath =
+      process.env.ZLE_EXECUTABLE_PATH ||
+      (process.platform === "darwin" &&
+        "/Applications/Chromium.app/Contents/MacOS/Chromium") ||
+      (process.platform === "linux" && "/usr/bin/chromium-browser") ||
+      undefined;
+  }
+
+  before(async function() {
+    this.browser = await launch(options);
+  });
+
+  after(async function() {
+    if (this.browser) {
+      await this.browser.close();
     }
-    const factory = new ContextFactory();
-    const context = await factory.create(options);
+  });
+
+  beforeEach(async function() {
+    const factory = new ContextFactory(this.browser);
+    const context = await factory.create();
     _context = context;
   });
 
-  afterEach(async () => {
+  afterEach(async function() {
     if (_context) {
-      await _context.browser.close();
+      await _context.page.close();
       _context = undefined;
     }
   });
