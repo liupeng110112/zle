@@ -7,6 +7,7 @@
   "author": "indexmotion <indexmotion@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "@types/mocha": "^5.0.0",
     "nyc": "^11.4.1",
     "typedoc": "^0.9.0",
     "typescript": "^2.6.2"
@@ -14,17 +15,18 @@
   "dependencies": {
     "@types/lodash": "^4.14.104",
     "@types/puppeteer": "^1.0.0",
-    "ava": "^0.24.0",
+    "mocha": "^5.0.5",
     "puppeteer": "1.0.0"
   },
   "scripts": {
     "tsc": "./node_modules/.bin/tsc",
     "tsc:auto": "yarn tsc --watch",
-    "test": "./node_modules/.bin/ava test/**/*.test.js $ZLE_TEST_OPTIONS || true",
-    "pretest": "yarn run tsc && (node ./test/scaffolds/startTestingServer &)",
-    "posttest": "node ./test/scaffolds/stopTestingServer",
-    "test:auto": "ZLE_TEST_OPTIONS='$ZLE_TEST_OPTIONS --watch' yarn test",
-    "test:cov": "./node_modules/.bin/nyc --reporter=text --reporter=html yarn test",
+    "test":
+      "./node_modules/.bin/mocha test/*.test.js $ZLE_TEST_OPTIONS || true",
+    "pretest": "yarn run tsc && (node ./test/TestServer start &)",
+    "posttest": "node ./test/TestServer stop",
+    "test:cov":
+      "./node_modules/.bin/nyc --reporter=text --reporter=html yarn test",
     "release": "yarn test && yarn publish --registry http://registry.npmjs.org",
     "mkdoc": "./node_modules/.bin/typedoc --out doc lib/"
   }

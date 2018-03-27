@@ -18,3 +18,40 @@ export class ContextFactory {
     return new Context(browser, page);
   }
 }
+
+let _context: Context | undefined;
+
+export const context = new Proxy<Context>({} as any, {
+  get: (_, key: string) => {
+    if (_context) {
+      return (_context as any)[key];
+    } else {
+      throw new Error(
+        "No context found, did you forget to invoke zle.initialize() in test file?"
+      );
+    }
+  }
+});
+
+export function initialize(options: LaunchOptions = {}) {
+  beforeEach(async () => {
+    if (!options.executablePath) {
+      options.executablePath =
+        process.env.ZLE_EXECUTABLE_PATH ||
+        (process.platform === "darwin" &&
+          "/Applications/Chromium.app/Contents/MacOS/Chromium") ||
+        (process.platform === "linux" && "/usr/bin/chromium-browser") ||
+        undefined;
+    }
+    const factory = new ContextFactory();
+    const context = await factory.create(options);
+    _context = context;
+  });
+
+  afterEach(async () => {
+    if (_context) {
+      await _context.browser.close();
+      _context = undefined;
+    }
+  });
+}

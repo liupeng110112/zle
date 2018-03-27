@@ -1,6 +1,5 @@
 import * as assert from "assert";
 import { chain } from "../lib/Chain";
-import { test } from "ava";
 
 class Post {
   comments = new Array<string>();
@@ -48,18 +47,19 @@ class CommentComposer {
   }
 }
 
-test("chain", async t => {
-  const post = new Post(1);
-  await post
-    .openComposer()
-    .compose("say something here")
-    .assertCommentExists("say something here")
-    .openPageNavigator()
-    .goto(5)
-    .assertPageNumber(5)
-    .openComposer()
-    .compose("say something other here")
-    .assertCommentExists("say something other here")
-    .$done();
-  t.pass();
+describe("Chainable", () => {
+  it("supports method chaining", async () => {
+    const post = new Post(1);
+    await post
+      .openComposer()
+      .compose("say something here")
+      .assertCommentExists("say something here")
+      .openPageNavigator()
+      .goto(5)
+      .assertPageNumber(5)
+      .openComposer()
+      .compose("say something other here")
+      .assertCommentExists("say something other here")
+      .$done();
+  });
 });

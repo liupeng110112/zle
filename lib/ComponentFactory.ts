@@ -76,8 +76,12 @@ export class ComponentFactory<T> {
             });
           } else if (node.satisfying) {
             return new Promise<ElementHandle>(async (resolve, reject) => {
-              setTimeout(() => reject(`Time exceed: ${timeout}ms`), timeout!);
+              const timer = setTimeout(
+                () => reject(`Time exceed: ${timeout}ms`),
+                timeout!
+              );
               await page.waitForSelector(nodeSelector);
+              clearTimeout(timer);
               const elementHandle = await page.$(nodeSelector);
               await page.evaluate(node.satisfying!, elementHandle);
               resolve(elementHandle!);

@@ -1,112 +1,105 @@
-import { ContextFactory } from "../lib/ContextFactory";
-import { getExecutablePath, getPageUrl } from "./";
+import * as assert from "assert";
+import { context, initialize } from "../lib/ContextFactory";
+import { getPageUrl } from "./TestServer";
 import { Post } from "./assets/post.components";
 import { SitePage } from "./assets/site.components";
-import { test } from "../lib/index";
 import { TodoApp } from "./assets/todo.components";
 
-test.beforeEach(async t => {
-  const factory = new ContextFactory();
-  t.context = await factory.create({
-    executablePath: getExecutablePath()
+describe("Context", () => {
+  initialize();
+
+  it("#waitFor with component", async () => {
+    const page = context.page;
+    await page.goto(getPageUrl("post"));
+    const post = await context.waitFor(Post);
+    assert.equal(await post.$getSelector(), "html > body > div:nth-child(1)");
   });
-});
 
-test.afterEach.always(async t => {
-  await t.context.browser.close();
-});
+  it("#waitFor with page object", async () => {
+    await context.page.goto(getPageUrl("site"));
+    const page = await context.waitFor(SitePage);
+    assert.ok(page instanceof SitePage);
+  });
 
-test("#waitFor with component", async t => {
-  const page = t.context.page;
-  await page.goto(getPageUrl("post"));
-  const post = await t.context.waitFor(Post);
-  t.is(await post.$getSelector(), "html > body > div:nth-child(1)");
-});
-
-test("#waitFor with page object", async t => {
-  await t.context.page.goto(getPageUrl("site"));
-  const page = await t.context.waitFor(SitePage);
-  t.truthy(page instanceof SitePage);
-});
-
-test("#$$", async t => {
-  const page = t.context.page;
-  await page.goto(getPageUrl("post"));
-  const posts = [];
-  let index = 0;
-  for await (let post of t.context.$$(Post)) {
-    t.is(await post.getTitle(), `Post ${++index}`);
-    posts.push(post);
-  }
-  t.is(posts.length, 5);
-});
-
-test("#$$ with satisfying function", async t => {
-  const page = t.context.page;
-  await page.goto(getPageUrl("post"));
-  const posts = [];
-  for await (let post of t.context.$$(
-    Post,
-    async post => (await post.getTitle()) === "Post 3"
-  )) {
-    posts.push(post);
-  }
-  t.is(posts.length, 1);
-  t.is(await posts[0].getTitle(), "Post 3");
-});
-
-test("#$_ with not unique component", async t => {
-  const page = t.context.page;
-  await page.goto(getPageUrl("post"));
-  try {
-    await t.context.$_(Post);
-  } catch (err) {
-    if (err instanceof Error) {
-      t.is(
-        err.message,
-        'Component "Post" is not unique by selector "div.post"'
-      );
+  it("#$$", async () => {
+    const page = context.page;
+    await page.goto(getPageUrl("post"));
+    const posts = [];
+    let index = 0;
+    for await (let post of context.$$(Post)) {
+      assert.equal(await post.getTitle(), `Post ${++index}`);
+      posts.push(post);
     }
-  }
-});
+    assert.equal(posts.length, 5);
+  });
 
-test("#$_ with unique component", async t => {
-  const page = t.context.page;
-  await page.goto(getPageUrl("todo"));
-  const todoApp = await t.context.$_(TodoApp);
-  t.truthy(todoApp instanceof TodoApp);
-});
+  it("#$$ with satisfying function", async () => {
+    const page = context.page;
+    await page.goto(getPageUrl("post"));
+    const posts = [];
+    for await (let post of context.$$(
+      Post,
+      async post => (await post.getTitle()) === "Post 3"
+    )) {
+      posts.push(post);
+    }
+    assert.equal(posts.length, 1);
+    assert.equal(await posts[0].getTitle(), "Post 3");
+  });
 
-test("#$_ with satisfying function", async t => {
-  const page = t.context.page;
-  await page.goto(getPageUrl("post"));
-  const post = await t.context.$_(
-    Post,
-    async post => (await post.getTitle()) === "Post 3"
-  );
-  t.truthy(post instanceof Post);
-  t.is(await post!.getTitle(), "Post 3");
-});
+  it("#$_ with not unique component", async () => {
+    const page = context.page;
+    await page.goto(getPageUrl("post"));
+    try {
+      await context.$_(Post);
+    } catch (err) {
+      if (err instanceof Error) {
+        assert.equal(
+          err.message,
+          'Component "Post" is not unique by selector "div.post"'
+        );
+      }
+    }
+  });
 
-test("#$", async t => {
-  const page = t.context.page;
-  await page.goto(getPageUrl("post"));
-  const post = await t.context.$(Post);
-  t.is(await post!.getTitle(), "Post 1");
-});
+  it("#$_ with unique component", async () => {
+    const page = context.page;
+    await page.goto(getPageUrl("todo"));
+    const todoApp = await context.$_(TodoApp);
+    assert.ok(todoApp instanceof TodoApp);
+  });
 
-test("#$ with not existed component", async t => {
-  const page = t.context.page;
-  await page.goto(getPageUrl("post"));
-  t.is(await t.context.$(TodoApp), undefined);
-});
+  it("#$_ with satisfying function", async () => {
+    const page = context.page;
+    await page.goto(getPageUrl("post"));
+    const post = await context.$_(
+      Post,
+      async post => (await post.getTitle()) === "Post 3"
+    );
+    assert.ok(post instanceof Post);
+    assert.equal(await post!.getTitle(), "Post 3");
+  });
 
-test("#$ with satisfying component", async t => {
-  const page = t.context.page;
-  await page.goto(getPageUrl("post"));
-  const post = await t.context.$(
-    Post,
-    async post => (await post.getTitle()) === "Post 3"
-  );
-  t.is(await post!.getTitle(), "Post 3");
+  it("#$", async () => {
+    const page = context.page;
+    await page.goto(getPageUrl("post"));
+    const post = await context.$(Post);
+    assert.equal(await post!.getTitle(), "Post 1");
+  });
+
+  it("#$ with not existed component", async () => {
+    const page = context.page;
+    await page.goto(getPageUrl("post"));
+    assert.equal(await context.$(TodoApp), undefined);
+  });
+
+  it("#$ with satisfying component", async () => {
+    const page = context.page;
+    await page.goto(getPageUrl("post"));
+    const post = await context.$(
+      Post,
+      async post => (await post.getTitle()) === "Post 3"
+    );
+    assert.equal(await post!.getTitle(), "Post 3");
+  });
 });

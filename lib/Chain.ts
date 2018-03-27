@@ -2,47 +2,39 @@ export type Chainable<T> = {
   $done(): Promise<T>;
 } & T;
 
-export function chain<T>(bootstrap: () => Promise<T>) {
-  const instructions = new Array<[string, any[]]>();
-  const semaphore = {
-    isDone: false
-  };
-  setTimeout(() => {
-    if (!semaphore.isDone) {
-      console.error(
-        `[Did you forget to invoke "$done" at the end of method chaining?]`
-      );
-      process.exit(1);
-    }
-  }, process.env.ZLE_WAIT_FOR_CHAIN_DONE_TIMEOUT || 10000);
-  const proxy = new Proxy(
-    {},
-    {
-      get: (_, name: string) => {
-        return (...args: any[]) => {
-          if (name === "$done") {
-            semaphore.isDone = true;
-            return (async () => {
-              try {
-                let intermediate: any = await bootstrap();
-                for (let [name, args] of instructions) {
-                  intermediate = intermediate[name](...args);
-                  if (intermediate.$done) {
-                    intermediate = await intermediate.$done();
-                  }
+export function chain<T>(entrypoint: () => Promise<T>) {
+  const steps = new Array<[string, any[]]>();
+  const timer = setTimeout(() => {
+    console.error(
+      'Did you forget to invoke "$done" at the end of method chaining?'
+    );
+    process.exit(1);
+  }, process.env.ZLE_CHAINABLE_TIMEOUT || 10000);
+  const proxy = new Proxy<Chainable<T>>({} as any, {
+    get: (_, name: string) => {
+      return (...args: any[]) => {
+        if (name === "$done") {
+          clearTimeout(timer);
+          return (async () => {
+            try {
+              let value: any = await entrypoint();
+              for (let [name, args] of steps) {
+                value = value[name](...args);
+                if (value.$done) {
+                  value = await value.$done();
                 }
-                return Promise.resolve(intermediate);
-              } catch (err) {
-                return Promise.reject(err);
               }
-            })();
-          } else {
-            instructions.push([name, args]);
-            return proxy;
-          }
-        };
-      }
+              return Promise.resolve(value);
+            } catch (err) {
+              return Promise.reject(err);
+            }
+          })();
+        } else {
+          steps.push([name, args]);
+          return proxy;
+        }
+      };
     }
-  );
-  return proxy as Chainable<T>;
+  });
+  return proxy;
 }
