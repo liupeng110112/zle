@@ -1,3 +1,5 @@
-# zle
+# zle ❤ e2e
 
-"zle" means **z**le **l**oves **e**2e.
+Documentation: [zh_CN](./doc/zh_CN/index.md)
+
+(Coming soon...)

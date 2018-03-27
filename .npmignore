@@ -7,4 +7,3 @@ coverage/
 .vscode/
 
 !lib/**/*.d.ts
-
