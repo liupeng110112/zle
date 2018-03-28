@@ -1,3 +1,5 @@
+import * as fs from "fs";
+import * as path from "path";
 import { Context } from "./Context";
 import { ContextFactory } from "./ContextFactory";
 import { launch, LaunchOptions } from "puppeteer";
@@ -27,6 +29,12 @@ export function initialize(options: LaunchOptions = {}) {
   }
 
   suiteSetup(async function() {
+    const now = new Date();
+    this.reportDir = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}-${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}.${now
+      .getMilliseconds()
+      .toString()
+      .padStart(3, "0")}`;
+    fs.mkdirSync(this.reportDir);
     this.browser = await launch(options);
   });
 
@@ -44,6 +52,18 @@ export function initialize(options: LaunchOptions = {}) {
 
   teardown(async function() {
     if (_context) {
+      if (this.currentTest.state === "failed") {
+        await _context.page.screenshot({
+          path: path.join(
+            this.reportDir,
+            path.format({
+              name: this.currentTest.fullTitle(),
+              ext: ".png"
+            })
+          ),
+          fullPage: true
+        });
+      }
       await _context.page.close();
       _context = undefined;
     }

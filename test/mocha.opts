@@ -1,4 +1,5 @@
 --ui tdd
---recursive
+--require intelli-espower-loader
 --file ./initialize
+--recursive
 test/*.test.js

@@ -20,7 +20,7 @@ suite("Component", () => {
     await page.goto(getPageUrl("post"));
     const post = await context.waitFor(Post);
     const html = await post.$htmlOf("post header");
-    assert.equal(html.trim(), "<h2>Post 1</h2>");
+    assert.equal(html.trim(), "<h2>Post 2</h2>");
   });
 
   test("#$type", async () => {
