@@ -57,10 +57,6 @@ typings/
 # dotenv environment variables file
 .env
 
-lib/**/*.js
-lib/**/*.js.map
-lib/**/*.d.ts
-
-test/**/*.js
-test/**/*.js.map
-test/**/*.d.ts
+*.js
+*.js.map
+*.d.ts

@@ -1,14 +1,12 @@
 import * as assert from "assert";
 import { CommentItem, Post } from "./assets/post.components";
-import { context, initialize } from "../lib/ContextFactory";
+import { context } from "../lib";
 import { Gate, Zoo } from "./assets/zoo.components";
 import { getPageUrl } from "./TestServer";
 import { HoverTransitionRect, InitTransitionRect } from "./assets/rect.components";
 import { TodoApp } from "./assets/todo.components";
 
 suite("Component", () => {
-  initialize();
-
   test("#$textOf", async () => {
     const page = context.page;
     await page.goto(getPageUrl("post"));

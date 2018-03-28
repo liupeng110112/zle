@@ -1,13 +1,11 @@
 import * as assert from "assert";
-import { context, initialize } from "../lib/ContextFactory";
+import { context } from "../lib";
 import { getPageUrl } from "./TestServer";
 import { Post } from "./assets/post.components";
 import { SitePage } from "./assets/site.components";
 import { TodoApp } from "./assets/todo.components";
 
 suite("Context", () => {
-  initialize();
-
   test("#waitFor with component", async () => {
     const page = context.page;
     await page.goto(getPageUrl("post"));

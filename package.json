@@ -20,17 +20,15 @@
   "scripts": {
     "tsc": "./node_modules/.bin/tsc",
     "tsc:prod": "yarn run tsc -p tsconfig.prod.json",
-    "tsc:auto": "yarn run tsc --watch --watch-extensions ts",
+    "tsc:auto": "yarn run tsc --watch",
     "test": "./node_modules/.bin/mocha || true",
     "pretest": "yarn run tsc && (node ./test/TestServer start &)",
     "posttest": "node ./test/TestServer stop",
     "test:cov": "./node_modules/.bin/nyc yarn test",
-    "release": "yarn test:prod && yarn publish --registry http://registry.npmjs.org"
+    "release":
+      "yarn test:prod && yarn publish --registry http://registry.npmjs.org"
   },
   "nyc": {
-    "reporter": [
-      "text",
-      "html"
-    ]
+    "reporter": ["text", "html"]
   }
 }
