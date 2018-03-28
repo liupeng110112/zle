@@ -1,6 +1,8 @@
 tsconfig.json
 tsconfig.prod.json
-lib/**/*.ts
+
+*.ts
+
 test/
 doc/
 coverage/
