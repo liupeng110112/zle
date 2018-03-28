@@ -64,5 +64,3 @@ lib/**/*.d.ts
 test/**/*.js
 test/**/*.js.map
 test/**/*.d.ts
-
-mochawesome-report/

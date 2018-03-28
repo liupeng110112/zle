@@ -1,4 +1,3 @@
 --ui tdd
---reporter mochawesome
 --recursive
 test/*.test.js
