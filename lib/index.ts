@@ -18,7 +18,12 @@ export const context = new Proxy<Context>({} as any, {
   }
 });
 
-export function initialize(options: LaunchOptions = {}) {
+export interface InitializeOptions extends LaunchOptions {
+  reportDir?: string;
+  screenshot?: boolean;
+}
+
+export function initialize(options: InitializeOptions = {}) {
   if (!options.executablePath) {
     options.executablePath =
       process.env.ZLE_EXECUTABLE_PATH ||
@@ -28,13 +33,14 @@ export function initialize(options: LaunchOptions = {}) {
       undefined;
   }
 
+  if (!options.reportDir) {
+    options.reportDir = process.env.ZLE_REPORT_DIR || process.cwd();
+  }
+
   suiteSetup(async function() {
-    const now = new Date();
-    this.reportDir = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}-${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}.${now
-      .getMilliseconds()
-      .toString()
-      .padStart(3, "0")}`;
-    fs.mkdirSync(this.reportDir);
+    if (!fs.existsSync(options.reportDir!)) {
+      fs.mkdirSync(options.reportDir!);
+    }
     this.browser = await launch(options);
   });
 
@@ -52,10 +58,10 @@ export function initialize(options: LaunchOptions = {}) {
 
   teardown(async function() {
     if (_context) {
-      if (this.currentTest.state === "failed") {
+      if (options.screenshot && this.currentTest.state === "failed") {
         await _context.page.screenshot({
           path: path.join(
-            this.reportDir,
+            options.reportDir!,
             path.format({
               name: this.currentTest.fullTitle(),
               ext: ".png"
