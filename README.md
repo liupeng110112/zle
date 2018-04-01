@@ -1,5 +1,5 @@
 # zle ❤ e2e
 
-Documentation: [zh_CN](./doc/zh_CN/index.md)
+Tutorial: [EN](./doc/tutorial.en.md) | [CN](./doc/tutorial.cn.md)
 
-(Coming soon...)
+(Enjoy it...)
