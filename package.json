@@ -1,6 +1,6 @@
 {
   "name": "zle",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "repository": "git@github.com:zle-loves-e2e/zle.git",
@@ -27,10 +27,12 @@
     "pretest": "yarn run tsc && (node ./test/TestServer start &)",
     "posttest": "node ./test/TestServer stop",
     "test:cov": "./node_modules/.bin/nyc yarn test",
-    "release":
-      "yarn test && yarn run tsc:prod && yarn publish --registry http://registry.npmjs.org"
+    "release": "yarn test && yarn run tsc:prod && yarn publish --registry http://registry.npmjs.org"
   },
   "nyc": {
-    "reporter": ["text", "html"]
+    "reporter": [
+      "text",
+      "html"
+    ]
   }
 }
