@@ -63,6 +63,7 @@ export class ComponentFactory<T> {
           let elementHandle: ElementHandle;
           if (this.scope) {
             elementHandle = await this.context.page.waitForFunction(
+              /* istanbul ignore next */
               (scopeElement: HTMLElement, selector: string) => {
                 return scopeElement.querySelector(selector);
               },
