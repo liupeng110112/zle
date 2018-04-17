@@ -57,25 +57,29 @@ export class ComponentFactory<T> {
   }
 
   async waitFor(timeout = DEFAULT_WAIT_FOR_TIMEOUT) {
-    const selector = await this.getComponentSelector();
-    const page = this.context.page;
-    await Promise.all(
-      Array.from(this._constructor.$definition.walkUINodes())
-        .filter(node => node.satisfying || !node.hasDescendants)
-        .map(node => {
-          const nodeSelector = [selector, node.selector].join(" ");
-          if (node.satisfying === "visible") {
-            return page.waitForSelector(nodeSelector, {
-              visible: true,
-              timeout
-            });
-          } else if (node.satisfying === "hidden") {
-            return page.waitForSelector(nodeSelector, {
-              visible: false,
-              timeout
-            });
-          } else if (node.satisfying) {
-            return new Promise<ElementHandle>(async (resolve, reject) => {
+    let elementHandle = (await Promise.all(
+      Array.from(this._constructor.$definition.walkUINodes(true)).map(
+        async node => {
+          let elementHandle: ElementHandle;
+          if (this.scope) {
+            elementHandle = await this.context.page.waitForFunction(
+              (scopeElement: HTMLElement, selector: string) => {
+                return scopeElement.querySelector(selector);
+              },
+              { timeout, polling: "mutation" },
+              this.scope.$elementHandle,
+              node.selector
+            );
+          } else {
+            elementHandle = await this.context.page.waitForSelector(
+              node.selector,
+              {
+                timeout
+              }
+            );
+          }
+          if (node.satisfying) {
+            await new Promise(async (resolve, reject) => {
               const timer = setTimeout(
                 () =>
                   reject(
@@ -83,28 +87,25 @@ export class ComponentFactory<T> {
                       this._constructor.name
                     } cannot be satisfied: ${timeout}ms`
                   ),
-                timeout!
+                timeout
               );
-              await page.waitForSelector(nodeSelector);
-              const elementHandle = await page.$(nodeSelector);
-              await page.evaluate(node.satisfying!, elementHandle);
+              await this.context.page.evaluate(node.satisfying!, elementHandle);
               clearTimeout(timer);
-              resolve(elementHandle!);
+              resolve();
             });
-          } else {
-            return page.waitForSelector(nodeSelector, { timeout });
           }
-        })
-    );
-    const elementHandle = await page.$(selector);
+          return elementHandle;
+        }
+      )
+    ))[0];
     if (elementHandle) {
       const component = await this.create(elementHandle);
       return component;
     } else {
       throw new Error(
-        `Cannot locate component ${
-          this._constructor.name
-        } by selector "${selector}"`
+        `Cannot locate component ${this._constructor.name} by selector "${
+          this._constructor.$definition.selector
+        }"`
       );
     }
   }

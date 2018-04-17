@@ -30,7 +30,6 @@ export abstract class Component {
 
   async *$walkUINodes(): AsyncIterableIterator<UINode> {
     const constructor = this.constructor as ComponentConstructor<any>;
-    const scopeSelector = await this.$getSelector();
     for await (let {
       selector,
       name,
@@ -38,7 +37,7 @@ export abstract class Component {
       hasDescendants
     } of constructor.$definition.walkUINodes()) {
       yield {
-        selector: [scopeSelector, selector].join(" "),
+        selector: selector,
         name,
         satisfying,
         hasDescendants
@@ -97,14 +96,12 @@ export abstract class Component {
     } else {
       const node = await this.$findUINode(name);
       if (node) {
-        const page = this.$context.page;
-        const selector = node.selector;
-        const elementHandle = await page.$(selector);
+        const elementHandle = await this.$elementHandle.$(node.selector);
         if (elementHandle) {
           return elementHandle;
         } else {
           throw new Error(
-            `Cannot locate UINode "${name}" by selector "${selector}"`
+            `Cannot locate UINode "${name}" by selector "${node.selector}"`
           );
         }
       } else {
