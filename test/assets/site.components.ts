@@ -1,5 +1,5 @@
 import { Component } from "../../lib/Component";
-import { PageObject } from "../../lib/PageObject";
+import { Page } from "../../lib/Page";
 import { UIDefinition } from "../../lib/UIDefinition";
 
 export class Header extends Component {
@@ -18,6 +18,6 @@ export class Footer extends Component {
   static $definition = UIDefinition.root("footer");
 }
 
-export class SitePage extends PageObject {
+export class SitePage extends Page {
   static $initialComponents = [Header, Nav, Main, Footer];
 }

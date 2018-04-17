@@ -1,6 +1,4 @@
 import { ComponentFactory } from "./ComponentFactory";
-import { PageObjectFactory } from "./PageObjectFactory";
+import { PageFactory } from "./PageFactory";
 
-export type DisplayObjectFactory<T> =
-  | ComponentFactory<T>
-  | PageObjectFactory<T>;
+export type DisplayObjectFactory<T> = ComponentFactory<T> | PageFactory<T>;

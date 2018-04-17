@@ -1,6 +1,6 @@
 import { ComponentConstructor } from "./ComponentConstructor";
-import { PageObjectConstructor } from "./PageObjectConstructor";
+import { PageConstructor } from "./PageConstructor";
 
 export type DisplayObjectConstructor<T> =
   | ComponentConstructor<T>
-  | PageObjectConstructor<T>;
+  | PageConstructor<T>;

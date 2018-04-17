@@ -4,7 +4,7 @@ import { ComponentFactory, SelectSatisfying } from "./ComponentFactory";
 import { DisplayObjectConstructor } from "./DisplayObjectConstructor";
 import { DisplayObjectFactory } from "./DisplayObjectFactory";
 import { Page } from "puppeteer";
-import { PageObjectFactory } from "./PageObjectFactory";
+import { PageFactory } from "./PageFactory";
 
 export class Context {
   container: any = {};
@@ -19,7 +19,7 @@ export class Context {
     if (constructor.$kind === "Component") {
       factory = new ComponentFactory(this, constructor);
     } else {
-      factory = new PageObjectFactory(this, constructor);
+      factory = new PageFactory(this, constructor);
     }
     return factory.waitFor(timeout);
   }

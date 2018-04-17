@@ -1,11 +1,11 @@
 import { Context } from "./Context";
 import { DEFAULT_WAIT_FOR_TIMEOUT } from "./index";
-import { PageObjectConstructor } from "./PageObjectConstructor";
+import { PageConstructor } from "./PageConstructor";
 
-export class PageObjectFactory<T> {
+export class PageFactory<T> {
   constructor(
     protected context: Context,
-    protected _constructor: PageObjectConstructor<T>
+    protected _constructor: PageConstructor<T>
   ) {}
 
   create() {

@@ -1,8 +1,8 @@
 import { ComponentConstructor } from "./ComponentConstructor";
 import { Context } from "./Context";
 
-export abstract class PageObject {
-  static $kind: "PageObject" = "PageObject";
+export abstract class Page {
+  static $kind: "Page" = "Page";
   static $initialComponents: Array<ComponentConstructor<any>>;
   static $url?: string;
 
