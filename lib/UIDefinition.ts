@@ -2,11 +2,10 @@ import { Component } from "./Component";
 import { ComponentConstructor } from "./ComponentConstructor";
 
 export type UISatisfyingFunction = (el: HTMLElement) => void;
-export type UISatisfying = "visible" | "hidden" | UISatisfyingFunction;
 export type UINode = {
   selector: string;
   name?: string;
-  satisfying?: UISatisfying;
+  satisfying?: UISatisfyingFunction;
   hasDescendants?: boolean;
 };
 
@@ -14,13 +13,17 @@ export type UINode = {
 export type Descendant = [
   string | ComponentConstructor<any>,
   string | undefined,
-  UISatisfying | undefined
+  UISatisfyingFunction | undefined
 ];
 
 export class UIDefinition {
   protected descendants = new Array<Descendant>();
 
-  static root(selector: string, name?: string, satisfying?: UISatisfying) {
+  static root(
+    selector: string,
+    name?: string,
+    satisfying?: UISatisfyingFunction
+  ) {
     return new UIDefinition(selector, name, satisfying);
   }
 
@@ -81,7 +84,7 @@ export class UIDefinition {
   withDescendant<T extends Component>(
     selectorOrConstructor: string | ComponentConstructor<T>,
     name?: string,
-    satisfying?: UISatisfying
+    satisfying?: UISatisfyingFunction
   ): UIDefinition {
     this.descendants.push([selectorOrConstructor, name, satisfying]);
     return this;
@@ -90,6 +93,6 @@ export class UIDefinition {
   protected constructor(
     public selector: string,
     public name?: string,
-    public satisfying?: UISatisfying
+    public satisfying?: UISatisfyingFunction
   ) {}
 }
