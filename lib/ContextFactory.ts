@@ -12,9 +12,6 @@ export class ContextFactory {
     // End of polyfill
 
     const page = await this.browser.newPage();
-    page.on("console", msg => {
-      console.log(`>>> [${msg.type}] ${msg.text}`);
-    });
     return new Context(page);
   }
 }
