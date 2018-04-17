@@ -10,10 +10,10 @@ suite("Context", () => {
     const page = context.page;
     await page.goto(getPageUrl("post"));
     const post = await context.waitFor(Post);
-    assert.equal(await post.$getSelector(), "html > body > div:nth-child(1)");
+    assert.equal(await post.getTitle(), "Post 1");
   });
 
-  test("#waitFor with page object", async () => {
+  test("#waitFor with page", async () => {
     await context.page.goto(getPageUrl("site"));
     const page = await context.waitFor(SitePage);
     assert.ok(page instanceof SitePage);

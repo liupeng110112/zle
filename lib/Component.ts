@@ -144,43 +144,4 @@ export abstract class Component {
     const factory = new ComponentFactory(this.$context, constructor, this);
     return factory.waitFor(timeout);
   }
-
-  async $getSelector() {
-    const page = this.$context.page;
-    const selector: string | undefined = await page.evaluate(
-      /* istanbul ignore next */
-      (el: HTMLElement) => {
-        const segments = new Array<string>();
-        let node = el;
-        while (node) {
-          const parent = node.parentElement!;
-          if (parent) {
-            const siblings = Array.from(parent.children);
-            if (node.localName !== "body" && siblings.length > 1) {
-              segments.push(
-                `${node.localName}:nth-child(${siblings.indexOf(node) + 1})`
-              );
-            } else {
-              segments.push(node.localName!);
-            }
-          } else if (node.localName === "html") {
-            segments.push(node.localName!);
-          } else {
-            return undefined;
-          }
-          node = parent;
-        }
-        segments.reverse();
-        return segments.join(" > ");
-      },
-      this.$elementHandle
-    );
-    if (selector) {
-      return selector;
-    } else {
-      throw new Error(
-        `Component ${this.constructor.name} is break away from DOM`
-      );
-    }
-  }
 }

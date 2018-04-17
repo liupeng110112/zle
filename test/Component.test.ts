@@ -118,7 +118,7 @@ suite("Component", () => {
       if (err instanceof Error) {
         assert.equal(
           err.message,
-          'Component "CommentItem" is not unique by selector "html > body > div:nth-child(3) li.comment"'
+          'Component "CommentItem" is not unique by selector "li.comment"'
         );
       }
     }

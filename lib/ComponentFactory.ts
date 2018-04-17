@@ -18,9 +18,10 @@ export class ComponentFactory<T> {
   }
 
   async *selectAll(satisfying?: SelectSatisfying<T>) {
-    const page = this.context.page;
-    const selector = await this.getComponentSelector();
-    for (let elementHandle of await page.$$(selector)) {
+    const scope = this.scope ? this.scope.$elementHandle : this.context.page;
+    for (let elementHandle of await scope.$$(
+      this._constructor.$definition.selector
+    )) {
       const component = await this.create(elementHandle);
       if (!satisfying || (await satisfying(component))) {
         yield component;
@@ -34,11 +35,10 @@ export class ComponentFactory<T> {
     let uniqueComponent: T | undefined;
     for await (let component of this.selectAll(satisfying)) {
       if (uniqueComponent) {
-        const selector = await this.getComponentSelector();
         throw new Error(
-          `Component "${
-            this._constructor.name
-          }" is not unique by selector "${selector}"`
+          `Component "${this._constructor.name}" is not unique by selector "${
+            this._constructor.$definition.selector
+          }"`
         );
       } else {
         uniqueComponent = component;
@@ -107,17 +107,6 @@ export class ComponentFactory<T> {
           this._constructor.$definition.selector
         }"`
       );
-    }
-  }
-
-  async getComponentSelector() {
-    if (this.scope) {
-      return [
-        await this.scope.$getSelector(),
-        this._constructor.$definition.selector
-      ].join(" ");
-    } else {
-      return this._constructor.$definition.selector;
     }
   }
 }
