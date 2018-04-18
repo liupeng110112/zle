@@ -1,6 +1,6 @@
 import { Component } from "./Component";
 import { ComponentConstructor } from "./ComponentConstructor";
-import { ComponentFactory, SelectSatisfying } from "./ComponentFactory";
+import { ComponentFactory, SelectSatisfyingFunction } from "./ComponentFactory";
 import { DisplayObjectConstructor } from "./DisplayObjectConstructor";
 import { DisplayObjectFactory } from "./DisplayObjectFactory";
 import { Page } from "puppeteer";
@@ -26,7 +26,7 @@ export class Context {
 
   selectAll = <T extends Component>(
     constructor: ComponentConstructor<T>,
-    satisfying?: SelectSatisfying<T>
+    satisfying?: SelectSatisfyingFunction<T>
   ) => {
     const factory = new ComponentFactory<T>(this, constructor);
     return factory.selectAll(satisfying);
@@ -35,7 +35,7 @@ export class Context {
 
   selectUnique = <T extends Component>(
     constructor: ComponentConstructor<T>,
-    satisfying?: SelectSatisfying<T>
+    satisfying?: SelectSatisfyingFunction<T>
   ) => {
     const factory = new ComponentFactory<T>(this, constructor);
     return factory.selectUnique(satisfying);
@@ -44,7 +44,7 @@ export class Context {
 
   selectFirst = <T extends Component>(
     constructor: ComponentConstructor<T>,
-    satisfying?: SelectSatisfying<T>
+    satisfying?: SelectSatisfyingFunction<T>
   ) => {
     const factory = new ComponentFactory<T>(this, constructor);
     return factory.selectFirst(satisfying);

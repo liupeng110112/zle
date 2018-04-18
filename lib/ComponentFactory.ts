@@ -4,23 +4,23 @@ import { Context } from "./Context";
 import { DEFAULT_WAIT_FOR_TIMEOUT } from "./index";
 import { ElementHandle } from "puppeteer";
 
-export type SelectSatisfying<T> = (component: T) => Promise<boolean>;
+export type SelectSatisfyingFunction<T> = (component: T) => Promise<boolean>;
 
 export class ComponentFactory<T> {
   constructor(
     protected context: Context,
-    protected _constructor: ComponentConstructor<T>,
+    protected component: ComponentConstructor<T>,
     protected scope?: Component
   ) {}
 
   create(elementHandle: ElementHandle) {
-    return new this._constructor(this.context, elementHandle);
+    return new this.component(this.context, elementHandle);
   }
 
-  async *selectAll(satisfying?: SelectSatisfying<T>) {
+  async *selectAll(satisfying?: SelectSatisfyingFunction<T>) {
     const scope = this.scope ? this.scope.$elementHandle : this.context.page;
     for (let elementHandle of await scope.$$(
-      this._constructor.$definition.selector
+      this.component.$definition.selector
     )) {
       const component = await this.create(elementHandle);
       if (!satisfying || (await satisfying(component))) {
@@ -31,13 +31,13 @@ export class ComponentFactory<T> {
     }
   }
 
-  async selectUnique(satisfying?: SelectSatisfying<T>) {
+  async selectUnique(satisfying?: SelectSatisfyingFunction<T>) {
     let uniqueComponent: T | undefined;
     for await (let component of this.selectAll(satisfying)) {
       if (uniqueComponent) {
         throw new Error(
-          `Component "${this._constructor.name}" is not unique by selector "${
-            this._constructor.$definition.selector
+          `Component "${this.component.name}" is not unique by selector "${
+            this.component.$definition.selector
           }"`
         );
       } else {
@@ -47,7 +47,7 @@ export class ComponentFactory<T> {
     return uniqueComponent as T;
   }
 
-  async selectFirst(satisfying?: SelectSatisfying<T>) {
+  async selectFirst(satisfying?: SelectSatisfyingFunction<T>) {
     let firstComponent: T | undefined;
     for await (let component of this.selectAll(satisfying)) {
       firstComponent = component;
@@ -58,7 +58,7 @@ export class ComponentFactory<T> {
 
   async waitFor(timeout = DEFAULT_WAIT_FOR_TIMEOUT) {
     let elementHandle = (await Promise.all(
-      Array.from(this._constructor.$definition.walkUINodes(true)).map(
+      Array.from(this.component.$definition.walkUINodes(true)).map(
         async node => {
           let elementHandle: ElementHandle;
           if (this.scope) {
@@ -85,7 +85,7 @@ export class ComponentFactory<T> {
                 () =>
                   reject(
                     `Component ${
-                      this._constructor.name
+                      this.component.name
                     } cannot be satisfied: ${timeout}ms`
                   ),
                 timeout
@@ -104,8 +104,8 @@ export class ComponentFactory<T> {
       return component;
     } else {
       throw new Error(
-        `Cannot locate component ${this._constructor.name} by selector "${
-          this._constructor.$definition.selector
+        `Cannot locate component ${this.component.name} by selector "${
+          this.component.$definition.selector
         }"`
       );
     }

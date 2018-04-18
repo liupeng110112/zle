@@ -2,7 +2,7 @@ import { chain } from "./Chain";
 import { Chainable } from "./Chain";
 import { ClickOptions, ElementHandle } from "puppeteer";
 import { ComponentConstructor } from "./ComponentConstructor";
-import { ComponentFactory, SelectSatisfying } from "./ComponentFactory";
+import { ComponentFactory, SelectSatisfyingFunction } from "./ComponentFactory";
 import { Context } from "./Context";
 import { UIDefinition, UINode } from "./UIDefinition";
 
@@ -112,7 +112,7 @@ export abstract class Component {
 
   $selectAll = <T extends Component>(
     constructor: ComponentConstructor<T>,
-    satisfying?: SelectSatisfying<T>
+    satisfying?: SelectSatisfyingFunction<T>
   ) => {
     const factory = new ComponentFactory(this.$context, constructor, this);
     return factory.selectAll(satisfying);
@@ -121,7 +121,7 @@ export abstract class Component {
 
   $selectUnique = <T extends Component>(
     constructor: ComponentConstructor<T>,
-    satisfying?: SelectSatisfying<T>
+    satisfying?: SelectSatisfyingFunction<T>
   ) => {
     const factory = new ComponentFactory(this.$context, constructor, this);
     return factory.selectUnique(satisfying);
@@ -130,7 +130,7 @@ export abstract class Component {
 
   $selectFirst = <T extends Component>(
     constructor: ComponentConstructor<T>,
-    satisfying?: SelectSatisfying<T>
+    satisfying?: SelectSatisfyingFunction<T>
   ) => {
     const factory = new ComponentFactory(this.$context, constructor, this);
     return factory.selectFirst(satisfying);
