@@ -42,6 +42,7 @@ export function initialize(options: InitializeOptions = {}) {
       fs.mkdirSync(options.reportDir!);
     }
     this.browser = await launch(options);
+    this.factory = new ContextFactory(this.browser);
   });
 
   suiteTeardown(async function() {
@@ -51,8 +52,7 @@ export function initialize(options: InitializeOptions = {}) {
   });
 
   setup(async function() {
-    const factory = new ContextFactory(this.browser);
-    const context = await factory.create();
+    const context = await this.factory.create();
     _context = context;
   });
 
