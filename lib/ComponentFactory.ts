@@ -100,7 +100,7 @@ export class ComponentFactory<T> {
       )
     ))[0];
     if (elementHandle) {
-      const component = await this.create(elementHandle);
+      const component = this.create(elementHandle);
       return component;
     } else {
       throw new Error(
