@@ -1,7 +1,7 @@
 import { Component } from "./Component";
 import { ComponentConstructor } from "./ComponentConstructor";
 
-export type UISatisfyingFunction = (el: HTMLElement) => void;
+export type UISatisfyingFunction = (el: HTMLElement) => Promise<void>;
 export type UINode = {
   selector: string;
   name?: string;
