@@ -130,7 +130,7 @@ export class TodoPanel extends Component{
 
 嵌套组件和单个组件一样，也可以用`root`和`withDescendant`的方式来描述这个组件，同时提供操作元素的方法。可以看到这个组件的后代组件只有`NewTodo`,其他两个组件也是它的后代，但是为什么没有添加进去呢？因为当我们初次打开[TodoMVC](http://todomvc.com/examples/)的时候，看到的`Todo`面板是这样的：
 
-![TodoAppIniti 面板](https://github.com/zle-loves-e2e/zle/blob/feature/doc_cn/doc/images/todoApp.png)
+![TodoAppIniti 面板](https://github.com/zle-loves-e2e/zle/blob/feature/doc_cn/doc/images/todoAppIniti.png)
 
 可以看到，只包含`NewTodo`这个组件，如果把`TodoItemList`和`FilterItem`也作为`TodoApp`的后代，当加载`TodoApp`组件的时候，就会出现加载超时的异常。
 
