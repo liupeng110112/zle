@@ -32,11 +32,13 @@ OK，此时您已经成功完成种子项目的初始化，浏览下当前项目
 
 ### 编写您的第一个测试组件
 
-以[TodoMVC](http://todomvc.com/examples/)页面为例，`TodoApp`主要的功能是管理`Todo`事项，最主要的组件是`Todo`面板
+以[TodoMVC](http://todomvc.com/examples/)页面为例，`TodoApp`的功能是管理`Todo`事项，主要的组件是`Todo`面板
 
-![TodoApp 面板](https://github.com/zle-loves-e2e/zle/blob/feature/doc_cn/doc/images/todoApp.png)
 
-这个组件由三个小的组件组成(`NewTodoItem`，`TodoItemList`，`FilterItem`),我们以`TodoItemList`为例，`TodoItemList`是由若干个`TodoItem`构成，每一个`TodoItem`是一样的，所以我们只用定义好`TodoItem`：
+#### 单个组件
+`TodoItem`是单个待办事项组件，它构成了`Todo`列表，每一个`TodoItem`是一样的，所以我们首先定义`TodoItem`：
+
+![TodoItem 面板](https://github.com/zle-loves-e2e/zle/blob/feature/doc_cn/doc/images/todoItem.png)
 
 ```ts
 /**单个待办事项条目 */
@@ -50,9 +52,8 @@ export class LatestTodoItem extends Component {
     .withDescendant("button.destroy", "delete");
 }
 ```
-`Component`是测试框架提供`zle`提供的类,用来描述组件的基本形状（`shape`）,`LatestTodoItem`继承于`Component`,这样我们可以自定义组件：
 
-![TodoItem 面板](https://github.com/zle-loves-e2e/zle/blob/feature/doc_cn/doc/images/todoItem.png)
+`Component`是测试框架`zle`提供的基类,用来描述组件的基本形状（`shape`）,`LatestTodoItem`继承于`Component`,这样我们可以自定义组件：
 
 静态变量`$definition`用于描述组件的结构，由根节点（`root`）和后代（`withDescendant`）组成，其中根节点表示组件包括的范围，后代表示根节点包括的元素。如上图所示，红色方框表示了单个`TodoItem`组件，这个组件由三个后代：勾选框（`checkout box`）,名称（`item name`）和删除按钮（`delete`）。
 
@@ -70,6 +71,11 @@ withDescendant("button.destroy", "delete");
 /**单个待办事项条目 */
 export class LatestTodoItem extends Component{
 
+  static $definition = UIDefinition.root("ul.todo-list li:nth-last-child(1)","todo")
+  .withDescendant("input.toggle","checkout box")
+  .withDescendant("label","item name")
+  .withDescendant("button.destroy","delete");
+
   /**勾选待办事项 */
   async checkoutTodoITem(){
     await this.$click("checkout box")
@@ -83,32 +89,12 @@ export class LatestTodoItem extends Component{
 }
 ```
 
-通过这些方法，我们可以改变`TodoItem`的状态，以及删除`TodoItem`的操作，这样我们就得到了一个完整的组件：
-
-```ts
-/**单个待办事项条目 */
-export class LatestTodoItem extends Component{
-  static $definition = UIDefinition.root("ul.todo-list li:nth-last-child(1)","todo")
-    .withDescendant("input.toggle","checkout box")
-    .withDescendant("label","item name")
-    .withDescendant("button.destroy","delete");
+通过这些方法，我们可以改变`TodoItem`的状态，以及删除`TodoItem`的操作，这样我们就得到了一个完整的组件，它是由定位元素和方法组成。
 
 
-  /**勾选待办事项 */
-  async checkoutTodoITem(){}
+#### 嵌套组件
 
-  /**获取待办事项的状态 */
-  async getTodoItemStatus(){}
-
-  /**删除待办事项 */
-  async delteTodoItem(){}
-
-  /**获取待办事项的名称 */
-  async getTodoItemName(){
-    return await this.$textOf("item name")
-  }
-}
-```
+嵌套组件是指组件由多个小的组件组成，例如
 
 ### 页面
 
